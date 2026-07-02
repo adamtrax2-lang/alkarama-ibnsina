@@ -1,0 +1,464 @@
+import { Link } from "react-router-dom";
+import { useLang } from "../i18n";
+import { useContent } from "../store";
+import {
+  visaCats,
+  visaIncludes,
+  billetsCards,
+  whyUs,
+  reviews,
+  wa,
+  type UmrahPack,
+  type Hotel,
+} from "../data";
+import { Icon, type IconName } from "./Icons";
+
+function SectionHead({ kicker, title, sub }: { kicker: string; title: string; sub?: string }) {
+  return (
+    <div className="mx-auto mb-8 max-w-2xl text-center">
+      <p className="eyebrow">{kicker}</p>
+      <h2 className="section-title mt-3">{title}</h2>
+      {sub && <p className="mt-4 text-charcoal/60">{sub}</p>}
+    </div>
+  );
+}
+
+// "Discover all" button, right aligned above a section's grid, links to the full listing page
+function DiscoverAll({ to, dark = false }: { to: string; dark?: boolean }) {
+  const { tr } = useLang();
+  return (
+    <div className="mb-6 flex justify-end">
+      <Link
+        to={to}
+        className={`group inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold shadow-lg transition ${
+          dark
+            ? "bg-gold text-charcoal hover:bg-gold-light"
+            : "bg-charcoal text-white hover:bg-charcoal-soft"
+        }`}
+      >
+        {tr("common.discoverAll")}
+        <Icon.arrow className="h-4 w-4 transition group-hover:translate-x-1" />
+      </Link>
+    </div>
+  );
+}
+
+function Stars({ n, className = "" }: { n: number; className?: string }) {
+  return (
+    <span className={`inline-flex ${className}`}>
+      {Array.from({ length: n }).map((_, i) => (
+        <Icon.star key={i} className="h-4 w-4 text-gold" />
+      ))}
+    </span>
+  );
+}
+
+/* ---------------- Umrah pack card (reused on homepage + full Omra page) ---------------- */
+export function OmraPackCard({ p }: { p: UmrahPack }) {
+  const { tr, lang } = useLang();
+  const hi = p.highlight;
+  return (
+    <div
+      className={`relative flex flex-col overflow-hidden rounded-3xl transition ${
+        hi
+          ? "bg-gradient-to-b from-gold-light to-gold text-charcoal shadow-2xl shadow-gold/30 md:-mt-4 md:mb-4 ring-2 ring-gold-light"
+          : "bg-white/[0.04] text-white ring-1 ring-white/10"
+      }`}
+    >
+      {p.img && (
+        <div className="relative h-32 w-full shrink-0">
+          <img src={p.img} alt={p.name[lang]} className="h-full w-full object-cover" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
+        </div>
+      )}
+      {hi && (
+        <span className="absolute right-5 top-5 rounded-full bg-charcoal px-3 py-1 text-[10px] font-bold uppercase tracking-wide text-gold-light">
+          {tr("omra.popular")}
+        </span>
+      )}
+      <div className="flex flex-1 flex-col p-7">
+        {/* date badge */}
+        <span
+          className={`inline-flex w-fit items-center gap-1.5 rounded-full px-3 py-1 text-[11px] font-semibold ${
+            hi ? "bg-charcoal/10 text-charcoal" : "bg-gold/15 text-gold-light"
+          }`}
+        >
+          <Icon.calendar className="h-3.5 w-3.5" /> {p.dateLabel[lang]}
+        </span>
+        {p.otherDates && (
+          <p className={`mt-1.5 text-[11px] ${hi ? "text-charcoal/55" : "text-white/40"}`}>{p.otherDates[lang]}</p>
+        )}
+
+        {/* duration + name */}
+        <p className={`mt-3 text-[11px] font-semibold uppercase tracking-[0.25em] ${hi ? "text-charcoal/60" : "text-white/45"}`}>
+          {p.duration[lang]}
+        </p>
+        <div className="mt-2 flex items-center justify-between">
+          <h3 className="font-display text-3xl font-bold">{p.name[lang]}</h3>
+          <Stars n={p.stars} className={hi ? "[&_svg]:text-charcoal" : ""} />
+        </div>
+
+        {/* services */}
+        <ul className={`mt-5 space-y-2.5 text-sm ${hi ? "text-charcoal/85" : "text-white/75"}`}>
+          {p.services.map((s) => (
+            <li key={s.fr} className="flex gap-2.5">
+              <Icon.check className={`mt-0.5 h-4 w-4 shrink-0 ${hi ? "text-charcoal" : "text-gold-light"}`} />
+              <span>{s[lang]}</span>
+            </li>
+          ))}
+        </ul>
+
+        {/* occupancy prices */}
+        <div className={`mt-6 grid grid-cols-3 gap-2 rounded-2xl p-3 text-center ${hi ? "bg-charcoal/10" : "bg-white/5"}`}>
+          {p.prices.map((pr) => (
+            <div key={pr.people}>
+              <p className={`text-[10px] font-medium ${hi ? "text-charcoal/60" : "text-white/45"}`}>
+                {pr.people} {tr("omra.people")}
+              </p>
+              <p className="mt-1 font-display text-xl font-bold leading-none">{pr.val}</p>
+              <p className={`text-[10px] ${hi ? "text-charcoal/60" : "text-white/45"}`}>DT</p>
+            </div>
+          ))}
+        </div>
+        <p className={`mt-2 text-center text-[11px] ${hi ? "text-charcoal/60" : "text-white/40"}`}>
+          {tr("omra.priceLabel")}
+        </p>
+
+        <a
+          href={wa(`Bonjour, je suis interesse par la formule Omra ${p.name.fr}.`)}
+          target="_blank"
+          rel="noreferrer"
+          className={`mt-6 inline-flex w-full items-center justify-center gap-2 rounded-full py-3 text-sm font-semibold transition ${
+            hi ? "bg-charcoal text-white hover:bg-charcoal-soft" : "btn-green !w-full"
+          }`}
+        >
+          <Icon.whatsapp className="h-4 w-4" /> {tr("hero.book")}
+        </a>
+      </div>
+    </div>
+  );
+}
+
+/* ---------------- Umrah & Hajj (first section) ---------------- */
+export function Omra() {
+  const { tr } = useLang();
+  const { content } = useContent();
+  return (
+    <section id="omra" className="relative overflow-hidden bg-charcoal py-20 text-white">
+      <div className="container-x">
+        <div className="mx-auto mb-12 max-w-2xl text-center">
+          <p className="eyebrow text-gold-light">{tr("omra.kicker")}</p>
+          <h2 className="section-title mt-3 text-white">{tr("omra.title")}</h2>
+          <p className="mt-4 text-white/70">{tr("omra.sub")}</p>
+          <span className="mx-auto mt-5 block h-0.5 w-20 rounded bg-gold" />
+        </div>
+
+        <DiscoverAll to="/omra" dark />
+        <div className="grid items-stretch gap-6 md:grid-cols-3">
+          {content.umrahPacks.map((p, i) => (
+            <OmraPackCard key={i} p={p} />
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ---------------- Hotel card (reused on homepage + full Hotels page) ---------------- */
+export function HotelCard({ h }: { h: Hotel }) {
+  const { tr, lang } = useLang();
+  return (
+    <div className="group relative h-80 overflow-hidden rounded-3xl shadow-lg">
+      <img
+        src={h.img}
+        alt={h.name}
+        className="h-full w-full object-cover transition duration-700 group-hover:scale-110"
+      />
+      <div className="absolute inset-0 bg-gradient-to-t from-charcoal/90 via-charcoal/25 to-transparent" />
+
+      {/* green reserve button, top-right corner */}
+      <a
+        href={wa(`Bonjour, je souhaite reserver a l'hotel ${h.name}.`)}
+        target="_blank"
+        rel="noreferrer"
+        className="absolute right-4 top-4 inline-flex items-center gap-1.5 rounded-full bg-emerald-600 px-4 py-2 text-xs font-semibold text-white opacity-0 shadow-lg transition group-hover:opacity-100 hover:bg-emerald-700"
+      >
+        <Icon.whatsapp className="h-4 w-4" /> {tr("hotels.book")}
+      </a>
+      <span className="absolute left-4 top-4 rounded-full bg-white/90 px-3 py-1 text-xs font-semibold text-charcoal">
+        {h.country[lang]}
+      </span>
+
+      {/* info overlay on the photo */}
+      <div className="absolute inset-x-0 bottom-0 p-5 text-white">
+        <div className="mb-1 flex items-center gap-1">
+          {Array.from({ length: h.stars }).map((_, i) => (
+            <Icon.star key={i} className="h-4 w-4 text-gold-light" />
+          ))}
+        </div>
+        <h3 className="font-display text-xl font-semibold">{h.name}</h3>
+        <p className="mt-0.5 flex items-center gap-1 text-sm text-white/80">
+          <Icon.pin className="h-4 w-4 text-gold-light" /> {h.city[lang]}
+        </p>
+        <p className="mt-2 text-sm">
+          <span className="text-xs text-white/60">{tr("common.from")} </span>
+          <span className="font-display text-lg font-bold text-gold-light">{h.price}</span>{" "}
+          <span className="text-white/70">{tr("hotels.night")}</span>
+        </p>
+      </div>
+    </div>
+  );
+}
+
+/* ---------------- Hotels ---------------- */
+export function Hotels() {
+  const { tr } = useLang();
+  const { content } = useContent();
+  return (
+    <section id="hotels" className="bg-cream py-20">
+      <div className="container-x">
+        <SectionHead kicker={tr("hotels.kicker")} title={tr("hotels.title")} sub={tr("hotels.sub")} />
+        <DiscoverAll to="/hotels" />
+        <div className="grid gap-6 md:grid-cols-3">
+          {content.hotels.map((h, i) => (
+            <HotelCard key={i} h={h} />
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ---------------- Visas ---------------- */
+export function Visas() {
+  const { tr, lang } = useLang();
+  return (
+    <section id="visas" className="bg-sand py-20">
+      <div className="container-x">
+        <SectionHead kicker={tr("visas.kicker")} title={tr("visas.title")} sub={tr("visas.sub")} />
+        <DiscoverAll to="/visas" />
+        <div className="grid gap-6 md:grid-cols-3">
+          {visaCats.map((v) => (
+            <div key={v.name.fr} className="card group flex flex-col">
+              <div className="relative overflow-hidden">
+                <img
+                  src={v.img}
+                  alt={v.name[lang]}
+                  className="h-44 w-full object-cover transition duration-500 group-hover:scale-105"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-charcoal/80 to-transparent" />
+                <h3 className="absolute bottom-3 left-4 font-display text-xl font-semibold text-white">
+                  {v.name[lang]}
+                </h3>
+              </div>
+              <div className="flex flex-1 flex-col p-5">
+                <p className="text-[11px] font-semibold uppercase tracking-wide text-gold">
+                  {tr("visas.included")}
+                </p>
+                <ul className="mt-3 space-y-2">
+                  {visaIncludes.map((inc) => (
+                    <li key={inc.fr} className="flex items-start gap-2 text-sm text-charcoal/70">
+                      <Icon.check className="mt-0.5 h-4 w-4 shrink-0 text-gold" /> {inc[lang]}
+                    </li>
+                  ))}
+                </ul>
+                <a
+                  href={wa(`Bonjour, je souhaite un visa (${v.name.fr}).`)}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="btn-gold mt-5"
+                >
+                  {tr("visas.apply")}
+                </a>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ---------------- Billets (plane + ferry image cards) ---------------- */
+export function Billets() {
+  const { tr, lang } = useLang();
+  return (
+    <section id="billets" className="bg-cream py-20">
+      <div className="container-x">
+        <SectionHead kicker={tr("billets.kicker")} title={tr("billets.title")} sub={tr("billets.sub")} />
+        <DiscoverAll to="/reserver-billet" />
+        <div className="mx-auto grid max-w-4xl gap-6 sm:grid-cols-2">
+          {billetsCards.map((c) => (
+            <div key={c.id} className="group relative h-72 overflow-hidden rounded-3xl shadow-lg">
+              <img
+                src={c.img}
+                alt={c.title[lang]}
+                className="h-full w-full object-cover transition duration-700 group-hover:scale-110"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-charcoal/90 via-charcoal/30 to-transparent" />
+              <div className="absolute inset-x-0 bottom-0 p-6 text-white">
+                <h3 className="font-display text-2xl font-semibold">{c.title[lang]}</h3>
+                <p className="mt-1 text-sm text-white/80">{c.desc[lang]}</p>
+                <Link to={`/reserver-billet?type=${c.id}`} className="btn-green mt-4">
+                  {c.id === "avion" ? <Icon.plane className="h-4 w-4" /> : <Icon.ferry className="h-4 w-4" />}
+                  {tr("common.bookNow")}
+                </Link>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ---------------- Why us ---------------- */
+export function WhyUs() {
+  const { tr, lang } = useLang();
+  return (
+    <section className="bg-sand py-20">
+      <div className="container-x">
+        <SectionHead kicker={tr("why.kicker")} title={tr("why.title")} />
+        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          {whyUs.map((w) => {
+            const I = Icon[w.icon as IconName];
+            return (
+              <div key={w.title.fr} className="flex items-center gap-4 rounded-2xl bg-white p-5 shadow-sm">
+                <span className="grid h-12 w-12 shrink-0 place-items-center rounded-xl bg-sand text-gold">
+                  <I className="h-6 w-6" />
+                </span>
+                <p className="font-medium text-charcoal">{w.title[lang]}</p>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ---------------- Reviews ---------------- */
+export function Reviews() {
+  const { tr, lang } = useLang();
+  const { content } = useContent();
+  const business = content.business;
+  return (
+    <section id="reviews" className="bg-cream py-20">
+      <div className="container-x">
+        <SectionHead kicker={tr("reviews.kicker")} title={tr("reviews.title")} sub={tr("reviews.sub")} />
+        <div className="grid gap-6 md:grid-cols-3">
+          {reviews.map((r) => (
+            <figure key={r.name} className="card p-6">
+              <Stars n={r.stars} />
+              <blockquote className="mt-3 text-sm leading-relaxed text-charcoal/75">“{r.text[lang]}”</blockquote>
+              <figcaption className="mt-4 flex items-center gap-3 border-t border-charcoal/10 pt-4">
+                <span className="grid h-10 w-10 place-items-center rounded-full bg-gold/15 font-semibold text-gold">
+                  {r.name.charAt(0)}
+                </span>
+                <div>
+                  <p className="text-sm font-semibold text-charcoal">{r.name}</p>
+                  <p className="text-xs text-charcoal/50">{r.city[lang]}</p>
+                </div>
+                <svg viewBox="0 0 48 48" className="ml-auto h-5 w-5" aria-label="Google">
+                  <path fill="#4285F4" d="M45.12 24.5c0-1.56-.14-3.06-.4-4.5H24v8.51h11.84c-.51 2.75-2.06 5.08-4.39 6.64v5.52h7.11c4.16-3.83 6.56-9.47 6.56-16.17z" />
+                  <path fill="#34A853" d="M24 46c5.94 0 10.92-1.97 14.56-5.33l-7.11-5.52c-1.97 1.32-4.49 2.1-7.45 2.1-5.73 0-10.58-3.87-12.31-9.07H4.34v5.7C7.96 41.07 15.4 46 24 46z" />
+                  <path fill="#FBBC05" d="M11.69 28.18C11.25 26.86 11 25.45 11 24s.25-2.86.69-4.18v-5.7H4.34C2.85 17.09 2 20.45 2 24s.85 6.91 2.34 9.88l7.35-5.7z" />
+                  <path fill="#EA4335" d="M24 10.75c3.23 0 6.13 1.11 8.41 3.29l6.31-6.31C34.91 4.18 29.93 2 24 2 15.4 2 7.96 6.93 4.34 14.12l7.35 5.7c1.73-5.2 6.58-9.07 12.31-9.07z" />
+                </svg>
+              </figcaption>
+            </figure>
+          ))}
+        </div>
+        <div className="mt-10 flex flex-col items-center gap-2">
+          <div className="flex">
+            {Array.from({ length: 5 }).map((_, n) => (
+              <Icon.star key={n} className="h-6 w-6 text-gold" />
+            ))}
+          </div>
+          <a href={business.facebook} target="_blank" rel="noreferrer" className="btn-outline mt-2">
+            {business.rating} · {business.reviews} {tr("common.googleReviews")}
+          </a>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ---------------- Contact ---------------- */
+export function Contact() {
+  const { tr } = useLang();
+  const { content } = useContent();
+  const business = content.business;
+  const items = [
+    { icon: Icon.pin, label: tr("contact.address"), value: business.address },
+    { icon: Icon.phone, label: tr("contact.phone"), value: `${business.phone} · ${business.phone2}` },
+    { icon: Icon.clock, label: tr("contact.hours"), value: tr("contact.hoursval") },
+  ];
+  return (
+    <section id="contact" className="bg-sand py-20">
+      <div className="container-x">
+        <SectionHead kicker={tr("contact.kicker")} title={tr("contact.title")} />
+        <div className="grid gap-8 lg:grid-cols-2">
+          <div className="space-y-5">
+            {items.map((it) => (
+              <div key={it.label} className="flex items-start gap-4 rounded-2xl bg-white p-5 shadow-sm">
+                <span className="grid h-12 w-12 shrink-0 place-items-center rounded-xl bg-sand text-gold">
+                  <it.icon className="h-6 w-6" />
+                </span>
+                <div>
+                  <p className="text-xs font-semibold uppercase tracking-wide text-charcoal/40">{it.label}</p>
+                  <p className="mt-1 font-medium text-charcoal">{it.value}</p>
+                </div>
+              </div>
+            ))}
+            <a href={wa("Bonjour AlKarama, je souhaite reserver.")} target="_blank" rel="noreferrer" className="btn-gold w-full">
+              <Icon.whatsapp className="h-5 w-5" /> {tr("contact.cta")}
+            </a>
+          </div>
+          <div className="overflow-hidden rounded-2xl shadow-sm">
+            <iframe
+              title="map"
+              className="h-full min-h-[320px] w-full"
+              loading="lazy"
+              src="https://www.google.com/maps?q=Centre%20Commercial%20Lawand%20Ibn%20Sina%20Tunis&output=embed"
+            />
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ---------------- Footer ---------------- */
+export function Footer() {
+  const { tr } = useLang();
+  const { content } = useContent();
+  const business = content.business;
+  return (
+    <footer className="bg-charcoal py-10 text-white/70">
+      <div className="container-x flex flex-col items-center justify-between gap-6 sm:flex-row">
+        <div className="flex items-center gap-3">
+          <img src="/brand/logo.jpeg" alt="" className="h-12 w-auto rounded-md bg-white p-1" />
+          <div>
+            <p className="font-display text-base font-semibold text-white">{business.name}</p>
+            <p className="text-xs">{business.address}</p>
+          </div>
+        </div>
+        <div className="flex items-center gap-3">
+          <a href={business.facebook} target="_blank" rel="noreferrer" className="grid h-10 w-10 place-items-center rounded-full bg-[#1877F2] text-white transition hover:opacity-90">
+            <Icon.facebook className="h-5 w-5" />
+          </a>
+          <a href={business.instagram} target="_blank" rel="noreferrer" className="instagram-grad grid h-10 w-10 place-items-center rounded-full text-white transition hover:opacity-90">
+            <Icon.instagram className="h-5 w-5" />
+          </a>
+          <a href={wa("Bonjour AlKarama.")} target="_blank" rel="noreferrer" className="grid h-10 w-10 place-items-center rounded-full bg-[#25D366] text-white transition hover:opacity-90">
+            <Icon.whatsapp className="h-5 w-5" />
+          </a>
+        </div>
+      </div>
+      <div className="container-x mt-8 border-t border-white/10 pt-6 text-center text-xs">
+        © 2026 {business.name}. {tr("footer.rights")} · {tr("footer.built")}
+      </div>
+    </footer>
+  );
+}
