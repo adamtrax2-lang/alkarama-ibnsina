@@ -6,7 +6,8 @@ type Dict = Record<string, { fr: string; en: string }>;
 
 export const t: Dict = {
   "nav.home": { fr: "Accueil", en: "Home" },
-  "nav.omra": { fr: "Omra et Hajj", en: "Umrah and Hajj" },
+  "nav.omra": { fr: "Packs Omra", en: "Umrah Packages" },
+  "nav.packs": { fr: "Nos Packs", en: "Our Packs" },
   "nav.hotels": { fr: "Hotels", en: "Hotels" },
   "nav.visas": { fr: "Visas", en: "Visas" },
   "nav.billets": { fr: "Billets", en: "Tickets" },
@@ -23,8 +24,8 @@ export const t: Dict = {
   "visas.included": { fr: "Inclus dans votre dossier", en: "Included in your file" },
   "visas.apply": { fr: "Demander le visa", en: "Apply for visa" },
 
-  "omra.kicker": { fr: "Omra et Hajj", en: "Umrah and Hajj" },
-  "omra.title": { fr: "Nos formules Omra 2026", en: "Our 2026 Umrah packages" },
+  "omra.kicker": { fr: "Packs Omra", en: "Umrah Packages" },
+  "omra.title": { fr: "Nos Formules Omra saison 2026-2027", en: "Our Umrah packages, 2026-2027 season" },
   "omra.sub": {
     fr: "7 nuits a Medine et 7 nuits a Makkah, en partenariat avec Al Morchidoun. Prix par personne selon l'occupation de la chambre.",
     en: "7 nights in Medina and 7 in Makkah, in partnership with Al Morchidoun. Price per person by room occupancy.",
@@ -76,6 +77,26 @@ export const t: Dict = {
   "why.title": { fr: "Une agence, pas un intermediaire", en: "An agency, not a middleman" },
 
   "partners.title": { fr: "Nos partenaires et affiliations", en: "Our partners and affiliations" },
+  "partners.kicker": { fr: "Ils nous accompagnent", en: "They work with us" },
+  "partners.sub": {
+    fr: "Des partenaires officiels reconnus pour un voyage en toute confiance.",
+    en: "Recognized official partners for a trip you can trust.",
+  },
+
+  "packs.kicker": { fr: "Nos Packs", en: "Our Packs" },
+  "packs.title": { fr: "Packs Voyage et Services", en: "Travel Packs and Services" },
+  "packs.sub": {
+    fr: "Voyages organises, transferts et location de bungalows. Contactez-nous pour un devis.",
+    en: "Organized trips, transfers and bungalow rentals. Contact us for a quote.",
+  },
+
+  "connect.kicker": { fr: "Reseaux sociaux", en: "Social media" },
+  "connect.title": { fr: "Connectez-vous avec nous", en: "Connect with us" },
+  "connect.sub": {
+    fr: "Suivez nos offres, nos inspirations voyage et nos nouveautes sur nos reseaux.",
+    en: "Follow our offers, travel inspiration and news on our channels.",
+  },
+  "connect.follow": { fr: "Suivre", en: "Follow" },
 
   "reviews.kicker": { fr: "Avis clients", en: "Reviews" },
   "reviews.title": { fr: "Ils nous font confiance", en: "They trust us" },
@@ -96,7 +117,7 @@ export const t: Dict = {
   "common.from": { fr: "A partir de", en: "From" },
   "common.backHome": { fr: "Retour a l'accueil", en: "Back to home" },
 
-  "omraPage.title": { fr: "Toutes nos formules Omra et Hajj 2026", en: "All our 2026 Umrah and Hajj packages" },
+  "omraPage.title": { fr: "Toutes nos formules Omra saison 2026-2027", en: "All our Umrah packages, 2026-2027 season" },
   "omraPage.sub": {
     fr: "Tous les departs et toutes les formules d'hotels disponibles. Contactez-nous pour reserver.",
     en: "All departures and every hotel option available. Contact us to book.",

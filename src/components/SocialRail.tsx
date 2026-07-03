@@ -5,8 +5,11 @@ export default function SocialRail() {
   const items = [
     { href: business.facebook, label: "Facebook", icon: Icon.facebook, cls: "bg-[#1877F2] text-white" },
     { href: business.instagram, label: "Instagram", icon: Icon.instagram, cls: "instagram-grad text-white" },
+    { href: business.tiktok, label: "TikTok", icon: Icon.tiktok, cls: "bg-black text-white" },
+    { href: business.youtube, label: "YouTube", icon: Icon.youtube, cls: "bg-[#FF0000] text-white" },
+    { href: business.x, label: "X", icon: Icon.x, cls: "bg-black text-white" },
     { href: wa("Bonjour AlKarama, j'ai une question."), label: "WhatsApp", icon: Icon.whatsapp, cls: "bg-[#25D366] text-white" },
-  ];
+  ].filter((it) => it.href); // hide any social whose URL is not set yet (X, YouTube)
 
   return (
     <div className="fixed right-3 top-1/2 z-40 flex -translate-y-1/2 flex-col gap-2.5">

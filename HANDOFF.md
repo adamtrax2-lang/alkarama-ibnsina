@@ -69,6 +69,18 @@ Hero (4 rotating service slides, Ken Burns zoom, side offer card with urgency ->
 - Confirmed via screenshots at 390px (mobile) and 1440px (desktop): hero offer card now visible and correctly stacked on mobile, hotels search bar and results grid render cleanly at both sizes, chatbot icon is gone, all internal routes (`/`, `/omra`, `/hotels`, `/visas`, `/reserver-billet`) load without console errors, and every `<a href>` on every page was enumerated and checked (no dead/empty hrefs).
 - `npm run build` (the command Vercel will run) verified to succeed cleanly.
 
+## Client change round (2026-07-03, local only, NOT pushed)
+Applied from the client's visual remarks + logo/partner images Adam relayed:
+- LOGO: replaced the text nav logo with the real gold falcon logo. Source `D:\alkarama logo.jpeg` processed with Pillow (crop + knock out off-white bg to transparent). Two outputs in `public/brand/`: `logo-full.png` (charcoal text, for light backgrounds) and `logo-white.png` (dark text recolored white, used in the dark navbar + footer). Slight soft halo on the white variant, acceptable; regenerate from a clean transparent source if the client sends one.
+- "Omra et Hajj" renamed to "Packs Omra" everywhere (nav, hero slide, omra kicker/title). "Hajj" word dropped per client.
+- Omra section retitled "Nos Formules Omra saison 2026-2027". Packs replaced with the client's 5 tiers: Classique / Confort / Prestige / VIP+ / A la Carte. IMPORTANT (Adam's steer: "Mawlid is a DATE, not a pack; the old flyers already hold all the prices, rearrange them"): each tier reuses the client's REAL published flyer data (hotels + prices + dates) remapped as an ascending comfort ladder. Mapping used -> Classique = summer Essentiel 4* (Ramada Dar Faiezine, 4250/4650/5250, departs 20/23/27 juil + 3/6/10 aout); Confort = Mawlid Manarat Ghazah 4* (4550/4850/5300, 25 aout); Prestige = Mawlid Ash-Shuhada 5* (5400/5850/6400, 25 aout); VIP+ = Mawlid Abraj Al Safwa 5*, highlighted (5850/6300/6950, 25 aout); A la Carte = custom, "sur demande". So Classique is a summer departure while Confort/Prestige/VIP+ are the 25-aout Mawlid departure (dates shown per card). NO invented numbers; the client should confirm the final ladder + ideally give one clean price grid per tier across all dates. `OmraPackCard` renders a price-on-request note when `prices` is empty, plus an optional `notIncluded` line ("timbre de voyage"). `UmrahPack` type gained optional `notIncluded` + `priceNote`. `umrahMoreDepartures` trimmed (removed Ash-Shuhada + Abraj Al Safwa, now featured) to avoid dupes on `/omra`; still holds Al Ayyam, Anfanti, Ramada, Hilton Marriott.
+- NEW section `TravelPacks` (id `#packs`, EliteMasar "Destinations Packs" style image cards): Voyage Organise / Transfert / Location de Bungalows -> WhatsApp. Data in `data.ts` `travelPacks`. Images are PLACEHOLDERS (istanbul/dubai/resort). Added nav item "Nos Packs".
+- NEW `Partners` section: color logos (client wanted color, not the white hero overlay). Copied color sources from `D:\` into `public/partners/*-color.*`; list in `data.ts` `colorPartners`. White hero-overlay logos untouched.
+- NEW `Connect` section (id `#connect`, EliteMasar "Connect With Us" style): branded follow cards, centered flex-wrap. Deliberately NO invented follower/post counts. Currently shows 3 cards (FB / IG / TikTok) because X + YouTube URLs aren't known yet.
+- Social everywhere (SocialRail + footer + Connect) auto-hides any platform whose URL is blank. `business` in `data.ts` gained `tiktok` (real @alkaramaibnsina), `x` and `youtube` (both "" for now -> set the string when the client sends them and they light up automatically). New icons `tiktok/youtube/x` in `Icons.tsx`.
+- DATA STILL NEEDED FROM CLIENT to finalize: confirm/complete the Omra price ladder (ideally one price grid per tier across all season dates); real X handle + YouTube channel URL; real photos for the 3 travel packs (currently on-brand placeholders: cappadocia / dubai / resort) + their prices if any.
+- `npx tsc --noEmit` clean, no console errors, all images load (verified in preview).
+
 ## PENDING - frontend
 - Amadeus logo missing (text only). Adam to provide or leave as text.
 - Background photo for the homepage Omra packs section (dark charcoal section): Adam said he'd send a separate photo for this, not yet received.
@@ -76,12 +88,13 @@ Hero (4 rotating service slides, Ken Burns zoom, side offer card with urgency ->
 - Hotel search is a client-side filter only; Adam wants it eventually wired to his real hotel booking/availability system (unspecified which one yet) - ask him which system when that phase starts.
 - A "Nos Services" page (nav item planned) - not built yet.
 
-## Deployment
-- Deploying frontend-only today via Vercel (backend/Supabase not started yet, so this is static content from src/data.ts - client can't self-edit until the 850 phase).
-- No git repo in this folder yet (`git init` not run). Fastest path without git: `npx vercel --prod` from the project root, which uploads the local build directly - no GitHub needed. `vercel.json` (SPA rewrite) already in place for the React Router routes.
+## Deployment (LIVE since 2026-07-02)
+- GitHub repo: https://github.com/adamtrax2-lang/alkarama-ibnsina (Adam's own account, created for this project). Connected to Vercel with auto-deploy: every push to `main` redeploys automatically, no manual Vercel step needed after the initial import.
+- KNOWN QUIRK: this Windows machine has git credentials cached for a DIFFERENT GitHub account (`adamscalesai`), not `adamtrax2-lang`. A plain `git push` will fail with 403. Fix used so far: ask Adam for a fresh classic Personal Access Token from github.com/settings/tokens (repo scope, logged in as adamtrax2-lang), then `git remote set-url origin https://<token>@github.com/adamtrax2-lang/alkarama-ibnsina.git`, push, then `git remote set-url origin https://github.com/adamtrax2-lang/alkarama-ibnsina.git` to remove the token from the stored config again. Tell Adam to revoke the token after use.
+- Current deployed commits: `858debd` (initial frontend) + `346d809` (mobile date-field fix). Only frontend fixes have been pushed so far - the backend/Supabase work described below is still local-only (uncommitted), intentionally, since it is not finished/tested yet. Do NOT `git add -A` blindly - check `git status`/`git diff --stat` first and stage only what's actually ready to ship, so half-finished backend work doesn't go live by accident.
 - Recommended: separate Vercel account (or at least a separate Team) from Adam's personal one - keeps usage/limits and ownership separate, and makes it easy to hand off access to the client later if ever needed.
 - Heads up on Vercel's free "Hobby" tier: its terms are technically for personal/non-commercial use. Using it to host a paid client's site is extremely common among freelancers and low risk for a small low-traffic site like this, but it is not strictly "by the book." If Adam wants to be fully compliant, Cloudflare Pages' free tier explicitly allows commercial use, or Vercel Pro (~$20/mo) is the sanctioned commercial option. Charging the client an ongoing "hosting/maintenance" fee while the underlying platform costs Adam nothing is normal agency practice either way - not an issue by itself.
-- After deploy: connect Adam's purchased domain in the Vercel project's Domains settings (standard DNS/CNAME step).
+- Domain: not yet connected. After Adam buys it, add it in the Vercel project's Domains settings (standard DNS/CNAME step).
 
 ## Backend admin panel (DEMO built 2026-07-02, local-first)
 - Goal for the client meeting: a working, clickable admin panel that proves he can self-edit packs/dates/prices with no code. Built local-first (saves in the browser) so it needs zero accounts and demos instantly. The database swap is a later, isolated change.
@@ -89,15 +102,28 @@ Hero (4 rotating service slides, Ken Burns zoom, side offer card with urgency ->
 - Store currently manages: `umrahPacks`, `umrahMoreDepartures`, `hotels`, `business`. Public consumers now read from the store: `Sections.tsx` (Omra, Hotels, Reviews, Contact, Footer), `OmraPage`, `HotelsPage`. Everything else (visas, hero, reviews text, whyUs, billets, `wa()` WhatsApp links) still reads static from `src/data.ts` (not yet client-editable). Note: `wa()` deep links keep the fixed `business.phoneIntl` even if the phone is edited in the panel, wire that up when needed.
 - Admin at `/admin` (App.tsx renders it as a standalone shell: no public navbar/footer/social rail). `src/pages/AdminPage.tsx`. Tabs: Formules Omra (accueil) / Autres departs / Hotels / Coordonnees. Full add/edit/delete of packs (bilingual name, dates, duration, stars, highlight toggle, services list, prices-by-occupancy) and hotels; contact info editor. "Enregistrer" (dirty-aware), "Voir le site", "Reinitialiser tout", "Se deconnecter".
 - Admin UI language is FRENCH ONLY (internal tool, one French-speaking user). The CONTENT it edits stays bilingual FR+EN (both fields editable per string).
-- LOGIN IS A DEMO GATE, NOT REAL SECURITY: front-end password `alkarama2026` (const `ADMIN_PASSWORD` in AdminPage.tsx), auth flag in sessionStorage. Anyone with the URL + password can edit; edits live only in that browser. Real auth (one admin account) comes with Supabase. Say this to Adam so he understands it is a preview of the workflow, not production.
-- Verified end to end via preview: login works, edit a pack price -> Enregistrer -> persists to localStorage -> survives full reload -> homepage renders the new price. Demo data reset to defaults after testing (pristine for the meeting). `npx tsc --noEmit` clean, no console errors.
+- Verified end to end via preview (local mode): login works, edit a pack price -> Enregistrer -> persists -> survives full reload -> homepage renders the new price. Demo data reset to defaults after testing. `npx tsc --noEmit` clean, no console errors.
 
-## PENDING - backend (the Supabase swap, NOT started)
-- Supabase (free tier): tables for packages/hotels/visas/reviews/prices + Auth (one admin user = the client) + Storage (photos).
-- Swap `src/store.tsx` loadContent/save/reset to Supabase (async). Add a real login to `/admin` (replace the demo password gate). Add photo upload to Storage (the hotel image field currently just points at an existing /public path).
-- Extend the store to cover the sections still static (visas, hero slides, reviews) if the client wants to edit those too.
-- RLS: public can SELECT active rows, only authenticated admin can write. Storage bucket public-read.
-- Deploy: Vercel or Netlify (free) + Adam's custom domain (only real cost, ~40 TND/yr).
+## Supabase backend (CODE DONE 2026-07-02, auto-detect cloud/local)
+- Installed `@supabase/supabase-js`. The store now runs in one of TWO modes, chosen automatically at runtime:
+  - CLOUD: when `VITE_SUPABASE_URL` + `VITE_SUPABASE_ANON_KEY` env vars are present. Reads/writes one JSONB row (`site_content`, id `main`) in Supabase. Real Supabase Auth login (email+password) in /admin. Shared across all devices/visitors.
+  - LOCAL: when the keys are absent (current state). Reads/writes localStorage, demo password gate. This is the fallback so the app never breaks before setup.
+- Files: `src/supabase.ts` (client + `isSupabaseConfigured` + table constants), `src/store.tsx` (async load/save/reset, both modes), `src/pages/AdminPage.tsx` (adaptive login + Cloud/Local badge + save error handling), `supabase/schema.sql` (one table + RLS), `.env.example` (key template; real keys go in `.env.local`, already gitignored via `*.local`).
+- DESIGN CHOICE: whole editable site = one JSON document in one row (not normalized tables). This is a small single-site CMS; the JSON blob maps exactly to the store's `save(whole Content)` and keeps the DB code tiny. Revisit only if we ever need relational queries (we don't).
+- CLOUD mode is typecheck-clean but NOT yet verified live (needs a real project). LOCAL mode is fully verified.
+
+## TO GO LIVE ON THE CLOUD (the only manual steps, ~10 min, all free)
+1. Create a free Supabase project at supabase.com (New project; pick a region near Tunisia e.g. EU; set a DB password, save it).
+2. SQL Editor -> paste all of `supabase/schema.sql` -> Run.
+3. Authentication -> Users -> Add user -> the client's email + a password (this is his /admin login). Optionally disable "Confirm email" so it's active immediately.
+4. Project Settings -> API -> copy the Project URL and the `anon public` key. Put them in `.env.local` (copy from `.env.example`). Restart `npm run dev`.
+5. Add the SAME two vars in Vercel (Project -> Settings -> Environment Variables) and redeploy, so the live site is cloud-backed too.
+6. Then re-verify: /admin shows a "Cloud" badge + email login; a saved edit appears on another device/browser.
+
+## STILL PENDING - backend niceties (after cloud is live)
+- Photo upload from the panel (Supabase Storage). Today the hotel image field just points at an existing /public path.
+- Extend the store to cover sections still static if the client wants them editable: visas, hero slides, reviews text, whyUs, billets. (Currently editable: umrahPacks, umrahMoreDepartures, hotels, business.)
+- `wa()` WhatsApp links still use the fixed `business.phoneIntl` even if the phone is edited in the panel; wire up if needed.
 - Deliver a short Loom showing the client how to use the admin panel.
 
 ## Business / monetization notes (from Adam, for continuity)

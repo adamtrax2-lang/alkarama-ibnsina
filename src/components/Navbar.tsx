@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useLang } from "../i18n";
-import { wa } from "../data";
+import { business, wa } from "../data";
 
 const links = [
   { key: "nav.home", href: "/" },
   { key: "nav.omra", href: "/#omra" },
+  { key: "nav.packs", href: "/#packs" },
   { key: "nav.hotels", href: "/#hotels" },
   { key: "nav.visas", href: "/#visas" },
   { key: "nav.billets", href: "/#billets" },
@@ -29,14 +30,9 @@ export default function Navbar() {
       }`}
     >
       <nav className="container-x flex h-20 items-center justify-between">
-        {/* Text logo (no image, no box) */}
-        <Link to="/" className="flex items-center gap-2.5">
-          <span className="leading-none text-white">
-            <span className="block font-display text-lg font-bold tracking-[0.15em]">ALKARAMA</span>
-            <span className="mt-1 block text-[10px] font-medium tracking-[0.35em] text-white/70">
-              TOURISME · IBN SINA
-            </span>
-          </span>
+        {/* Brand logo (transparent PNG, white-text variant reads on the dark hero) */}
+        <Link to="/" className="flex items-center" aria-label={business.name}>
+          <img src="/brand/logo-white.png" alt={business.name} className="h-12 w-auto sm:h-14" />
         </Link>
 
         <div className="hidden items-center gap-7 lg:flex">

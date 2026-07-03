@@ -8,6 +8,9 @@ import {
   whyUs,
   reviews,
   wa,
+  business,
+  travelPacks,
+  colorPartners,
   type UmrahPack,
   type Hotel,
 } from "../data";
@@ -108,21 +111,36 @@ export function OmraPackCard({ p }: { p: UmrahPack }) {
           ))}
         </ul>
 
-        {/* occupancy prices */}
-        <div className={`mt-6 grid grid-cols-3 gap-2 rounded-2xl p-3 text-center ${hi ? "bg-charcoal/10" : "bg-white/5"}`}>
-          {p.prices.map((pr) => (
-            <div key={pr.people}>
-              <p className={`text-[10px] font-medium ${hi ? "text-charcoal/60" : "text-white/45"}`}>
-                {pr.people} {tr("omra.people")}
-              </p>
-              <p className="mt-1 font-display text-xl font-bold leading-none">{pr.val}</p>
-              <p className={`text-[10px] ${hi ? "text-charcoal/60" : "text-white/45"}`}>DT</p>
+        {/* not included */}
+        {p.notIncluded && (
+          <p className={`mt-3 text-xs italic ${hi ? "text-charcoal/60" : "text-white/45"}`}>{p.notIncluded[lang]}</p>
+        )}
+
+        {/* occupancy prices, or a "price on request" note when no prices are set yet */}
+        {p.prices.length > 0 ? (
+          <>
+            <div className={`mt-6 grid grid-cols-3 gap-2 rounded-2xl p-3 text-center ${hi ? "bg-charcoal/10" : "bg-white/5"}`}>
+              {p.prices.map((pr) => (
+                <div key={pr.people}>
+                  <p className={`text-[10px] font-medium ${hi ? "text-charcoal/60" : "text-white/45"}`}>
+                    {pr.people} {tr("omra.people")}
+                  </p>
+                  <p className="mt-1 font-display text-xl font-bold leading-none">{pr.val}</p>
+                  <p className={`text-[10px] ${hi ? "text-charcoal/60" : "text-white/45"}`}>DT</p>
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
-        <p className={`mt-2 text-center text-[11px] ${hi ? "text-charcoal/60" : "text-white/40"}`}>
-          {tr("omra.priceLabel")}
-        </p>
+            <p className={`mt-2 text-center text-[11px] ${hi ? "text-charcoal/60" : "text-white/40"}`}>
+              {tr("omra.priceLabel")}
+            </p>
+          </>
+        ) : (
+          p.priceNote && (
+            <div className={`mt-6 rounded-2xl p-3 text-center text-sm font-semibold ${hi ? "bg-charcoal/10 text-charcoal" : "bg-white/5 text-gold-light"}`}>
+              {p.priceNote[lang]}
+            </div>
+          )
+        )}
 
         <a
           href={wa(`Bonjour, je suis interesse par la formule Omra ${p.name.fr}.`)}
@@ -312,6 +330,103 @@ export function Billets() {
   );
 }
 
+/* ---------------- Travel packs & extra services (image cards) ---------------- */
+export function TravelPacks() {
+  const { tr, lang } = useLang();
+  return (
+    <section id="packs" className="bg-sand py-20">
+      <div className="container-x">
+        <SectionHead kicker={tr("packs.kicker")} title={tr("packs.title")} sub={tr("packs.sub")} />
+        <div className="grid gap-6 md:grid-cols-3">
+          {travelPacks.map((c) => (
+            <div key={c.id} className="group relative h-72 overflow-hidden rounded-3xl shadow-lg">
+              <img
+                src={c.img}
+                alt={c.title[lang]}
+                className="h-full w-full object-cover transition duration-700 group-hover:scale-110"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-charcoal/90 via-charcoal/35 to-transparent" />
+              <div className="absolute inset-x-0 bottom-0 p-6 text-white">
+                <h3 className="font-display text-2xl font-semibold">{c.title[lang]}</h3>
+                <p className="mt-1 text-sm text-white/80">{c.desc[lang]}</p>
+                <a href={wa(c.waMsg)} target="_blank" rel="noreferrer" className="btn-green mt-4">
+                  <Icon.whatsapp className="h-4 w-4" /> {tr("common.bookNow")}
+                </a>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ---------------- Partners (full color logos) ---------------- */
+export function Partners() {
+  const { tr } = useLang();
+  return (
+    <section className="bg-cream py-16">
+      <div className="container-x">
+        <SectionHead kicker={tr("partners.kicker")} title={tr("partners.title")} sub={tr("partners.sub")} />
+        <div className="mx-auto grid max-w-4xl grid-cols-2 items-center gap-5 sm:grid-cols-3 lg:grid-cols-5">
+          {colorPartners.map((p) => (
+            <div
+              key={p.name}
+              className="flex h-24 items-center justify-center rounded-2xl bg-white p-4 shadow-sm ring-1 ring-charcoal/5"
+            >
+              <img src={p.img} alt={p.name} className="max-h-full max-w-full object-contain" />
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ---------------- Connect (social media cards, EliteMasar style) ---------------- */
+export function Connect() {
+  const { tr } = useLang();
+  const socials = [
+    { label: "Facebook", handle: "AlKarama Ibn Sina", href: business.facebook, icon: Icon.facebook, header: "bg-[#1877F2]", btn: "bg-[#1877F2] hover:bg-[#1466d6]" },
+    { label: "Instagram", handle: "@alkarama.ibnsina.agency", href: business.instagram, icon: Icon.instagram, header: "instagram-grad", btn: "instagram-grad hover:opacity-90" },
+    { label: "TikTok", handle: "@alkaramaibnsina", href: business.tiktok, icon: Icon.tiktok, header: "bg-black", btn: "bg-black hover:bg-charcoal" },
+    { label: "YouTube", handle: "AlKarama Ibn Sina", href: business.youtube, icon: Icon.youtube, header: "bg-[#FF0000]", btn: "bg-[#FF0000] hover:bg-[#d60000]" },
+    { label: "X", handle: "AlKarama Ibn Sina", href: business.x, icon: Icon.x, header: "bg-black", btn: "bg-black hover:bg-charcoal" },
+  ].filter((s) => s.href); // X + YouTube appear automatically once their URLs are set in data.ts
+  return (
+    <section id="connect" className="bg-sand py-20">
+      <div className="container-x">
+        <SectionHead kicker={tr("connect.kicker")} title={tr("connect.title")} sub={tr("connect.sub")} />
+        <div className="mx-auto flex max-w-5xl flex-wrap justify-center gap-5">
+          {socials.map((s) => (
+            <div key={s.label} className="flex w-full flex-col overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-charcoal/5 sm:w-[calc(50%-0.625rem)] lg:w-72">
+              <div className={`flex items-center gap-2.5 px-4 py-3 text-white ${s.header}`}>
+                <s.icon className="h-5 w-5" />
+                <span className="text-sm font-semibold">{s.label}</span>
+              </div>
+              <div className="flex flex-1 flex-col items-center gap-2 px-4 py-6 text-center">
+                <span className="grid h-14 w-14 place-items-center rounded-full bg-cream text-charcoal ring-1 ring-charcoal/10">
+                  <s.icon className="h-7 w-7" />
+                </span>
+                <p className="text-sm font-semibold text-charcoal">{business.name}</p>
+                <p className="text-xs text-charcoal/55">{s.handle}</p>
+              </div>
+              <a
+                href={s.href}
+                target="_blank"
+                rel="noreferrer"
+                className={`m-4 mt-0 inline-flex items-center justify-center gap-2 rounded-full py-2.5 text-sm font-semibold text-white transition ${s.btn}`}
+              >
+                <s.icon className="h-4 w-4" /> {tr("connect.follow")}
+              </a>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 /* ---------------- Why us ---------------- */
 export function WhyUs() {
   const { tr, lang } = useLang();
@@ -438,9 +553,8 @@ export function Footer() {
     <footer className="bg-charcoal py-10 text-white/70">
       <div className="container-x flex flex-col items-center justify-between gap-6 sm:flex-row">
         <div className="flex items-center gap-3">
-          <img src="/brand/logo.jpeg" alt="" className="h-12 w-auto rounded-md bg-white p-1" />
+          <img src="/brand/logo-white.png" alt={business.name} className="h-14 w-auto" />
           <div>
-            <p className="font-display text-base font-semibold text-white">{business.name}</p>
             <p className="text-xs">{business.address}</p>
           </div>
         </div>
@@ -451,6 +565,21 @@ export function Footer() {
           <a href={business.instagram} target="_blank" rel="noreferrer" className="instagram-grad grid h-10 w-10 place-items-center rounded-full text-white transition hover:opacity-90">
             <Icon.instagram className="h-5 w-5" />
           </a>
+          {business.tiktok && (
+            <a href={business.tiktok} target="_blank" rel="noreferrer" aria-label="TikTok" className="grid h-10 w-10 place-items-center rounded-full bg-black text-white transition hover:opacity-90">
+              <Icon.tiktok className="h-5 w-5" />
+            </a>
+          )}
+          {business.youtube && (
+            <a href={business.youtube} target="_blank" rel="noreferrer" aria-label="YouTube" className="grid h-10 w-10 place-items-center rounded-full bg-[#FF0000] text-white transition hover:opacity-90">
+              <Icon.youtube className="h-5 w-5" />
+            </a>
+          )}
+          {business.x && (
+            <a href={business.x} target="_blank" rel="noreferrer" aria-label="X" className="grid h-10 w-10 place-items-center rounded-full bg-black text-white transition hover:opacity-90">
+              <Icon.x className="h-5 w-5" />
+            </a>
+          )}
           <a href={wa("Bonjour AlKarama.")} target="_blank" rel="noreferrer" className="grid h-10 w-10 place-items-center rounded-full bg-[#25D366] text-white transition hover:opacity-90">
             <Icon.whatsapp className="h-5 w-5" />
           </a>

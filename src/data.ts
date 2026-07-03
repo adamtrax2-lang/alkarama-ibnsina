@@ -13,6 +13,11 @@ export const business = {
   reviews: 15,
   facebook: "https://www.facebook.com/p/ALKarama-Tourisme-Ibn-Sina-Agency-61581158354727/",
   instagram: "https://www.instagram.com/alkarama.ibnsina.agency/",
+  tiktok: "https://www.tiktok.com/@alkaramaibnsina",
+  // Empty until the client sends the real handles. The UI hides any social whose URL is blank,
+  // so filling these strings later is all it takes to switch them on.
+  x: "",
+  youtube: "",
 };
 
 export const wa = (msg: string) =>
@@ -46,7 +51,7 @@ export const heroSlides: HeroSlide[] = [
     id: "omra",
     img: "/hero/hajj.png",
     cardImg: "/hero/mecca.jpg",
-    service: { fr: "Omra et Hajj", en: "Umrah and Hajj" },
+    service: { fr: "Packs Omra", en: "Umrah Packages" },
     headline: { fr: "Vivez votre Omra en toute serenite", en: "Live your Umrah in serenity" },
     tagline: {
       fr: "Encadrement complet, hotels face au Haram, en partenariat avec Al Morchidoun.",
@@ -128,6 +133,42 @@ export const heroPartners: { name: string; img?: string; text?: string }[] = [
   { name: "Go Turkiye", img: "/partners/turkiye.png" },
 ];
 
+// Full-color partner logos for the dedicated "Nos Partenaires" section (client asked for color, not the white hero overlay).
+export const colorPartners: { name: string; img: string }[] = [
+  { name: "Al Morchidoun", img: "/partners/morchidoun-color.jpeg" },
+  { name: "Saudi Tourism Authority", img: "/partners/saudi-color.png" },
+  { name: "IATA", img: "/partners/iata-color.png" },
+  { name: "Inspiring Tunisia", img: "/partners/tunisia-color.png" },
+  { name: "Go Turkiye", img: "/partners/turkiye-color.png" },
+];
+
+/* ---------- Travel packs & extra services (image cards, EliteMasar "Destinations Packs" style) ---------- */
+// New service lines requested by the client. Photos are PLACEHOLDERS from existing assets
+// until he sends real images and prices for each.
+export const travelPacks: { id: string; img: string; title: L; desc: L; waMsg: string }[] = [
+  {
+    id: "voyage",
+    img: "/hero/cappadocia.jpg",
+    title: { fr: "Voyage Organise", en: "Organized Trips" },
+    desc: { fr: "Circuits cles en main : vols, hotels et excursions.", en: "Turnkey trips: flights, hotels and excursions." },
+    waMsg: "Bonjour, je suis interesse par un voyage organise.",
+  },
+  {
+    id: "transfert",
+    img: "/hero/dubai.jpg",
+    title: { fr: "Transfert", en: "Transfers" },
+    desc: { fr: "Transferts aeroport et deplacements sur place.", en: "Airport transfers and local transport." },
+    waMsg: "Bonjour, je souhaite un service de transfert.",
+  },
+  {
+    id: "bungalows",
+    img: "/hero/resort.jpg",
+    title: { fr: "Location de Bungalows", en: "Bungalow Rental" },
+    desc: { fr: "Sejours en bungalows, ideal familles et groupes.", en: "Bungalow stays, ideal for families and groups." },
+    waMsg: "Bonjour, je souhaite louer un bungalow.",
+  },
+];
+
 /* ---------- Umrah packages (real data from the 2026 flyers) ---------- */
 // Flyer "Juillet-Aout 2026": 2 tiers (Essentiel/VIP), same price on all 6 dates: 20, 23, 27 juillet + 3, 6, 10 aout.
 // Flyer "Mawlid Ennabaoui" (25 aout 2026): 7 hotel tiers for that single date.
@@ -141,26 +182,38 @@ export type UmrahPack = {
   stars: number;
   highlight?: boolean;
   services: L[];
+  notIncluded?: L; // optional "Non inclus" line
   prices: { people: number; val: string }[];
+  priceNote?: L; // shown instead of the price grid when prices are not yet available
 };
+
+// Season 2026-2027 tiers requested by the client: Classique / Confort / Prestige / VIP+ / A la Carte.
+// These reuse the client's own REAL flyer data (hotels + prices + dates), remapped onto his new
+// tier names as an ascending comfort ladder. NOTE for continuity: Classique uses the summer flyer
+// (Essentiel 4*); Confort/Prestige/VIP+ use the real Mawlid Ennabaoui (25 aout) hotel ladder, so
+// their departure date differs from Classique. Every number/hotel here is REAL and published by the
+// client. A la Carte is the only "sur demande" card. The client should confirm the final mapping.
+const NIGHTS: L = { fr: "7 nuits Medine + 7 nuits Makkah", en: "7 nights Medina + 7 nights Makkah" };
+const NOT_INCLUDED: L = { fr: "Non inclus : timbre de voyage", en: "Not included: travel stamp" };
+const FLIGHT: L = { fr: "Vol Tunis - Jeddah - Tunis (Tunisair / Saudia)", en: "Flight Tunis - Jeddah - Tunis (Tunisair / Saudia)" };
+const INCLUDED: L = { fr: "Inclus : transfert, assurance, visa Omra, mazarat", en: "Included: transfer, insurance, Umrah visa, ziyarat" };
+const MAWLID_DATE: L = { fr: "Depart 25 aout 2026 (Mawlid Ennabaoui)", en: "Departure August 25, 2026 (Mawlid)" };
 
 export const umrahPacks: UmrahPack[] = [
   {
-    name: { fr: "Essentiel", en: "Essential" },
+    name: { fr: "Classique", en: "Classique" },
     img: "/hero/omra-essentiel.png",
-    dateLabel: { fr: "Depart le 20 juillet 2026", en: "Departs July 20, 2026" },
-    otherDates: {
-      fr: "Aussi les 23, 27 juillet et 3, 6, 10 aout 2026",
-      en: "Also July 23, 27 and August 3, 6, 10, 2026",
-    },
-    duration: { fr: "7 nuits Medine + 7 nuits Makkah", en: "7 nights Medina + 7 nights Makkah" },
+    dateLabel: { fr: "Departs 20, 23, 27 juillet 2026", en: "Departs July 20, 23, 27, 2026" },
+    otherDates: { fr: "Aussi les 3, 6, 10 aout 2026", en: "Also August 3, 6, 10, 2026" },
+    duration: NIGHTS,
     stars: 4,
     services: [
-      { fr: "Makkah : Ramada 4* Massa Al Faizeen", en: "Makkah: Ramada 4* Massa Al Faizeen" },
-      { fr: "Medine : Arkan Al Manar (100m Haram, zone nord)", en: "Medina: Arkan Al Manar (100m from Haram, north zone)" },
-      { fr: "Vol Tunisair / Saudia aller-retour", en: "Tunisair / Saudia round-trip flight" },
-      { fr: "Visa Omra + transferts + excursions (ziyarat)", en: "Umrah visa + transfers + excursions (ziyarat)" },
+      FLIGHT,
+      { fr: "Makkah : Ramada Dar Faiezine 4*", en: "Makkah: Ramada Dar Faiezine 4*" },
+      { fr: "Medine : Arkan Al Manar 4* ou Abraj Tabah 4*", en: "Medina: Arkan Al Manar 4* or Abraj Tabah 4*" },
+      INCLUDED,
     ],
+    notIncluded: NOT_INCLUDED,
     prices: [
       { people: 4, val: "4 250" },
       { people: 3, val: "4 650" },
@@ -168,21 +221,18 @@ export const umrahPacks: UmrahPack[] = [
     ],
   },
   {
-    name: { fr: "Mawlid Ennabaoui", en: "Mawlid Ennabaoui" },
+    name: { fr: "Confort", en: "Confort" },
     img: "/hero/omra-mawlid.png",
-    dateLabel: { fr: "Depart special le 25 aout 2026", en: "Special departure August 25, 2026" },
-    otherDates: {
-      fr: "3 autres formules d'hotels disponibles pour cette date",
-      en: "3 other hotel options available for this date",
-    },
-    duration: { fr: "7 nuits Medine + 7 nuits Makkah", en: "7 nights Medina + 7 nights Makkah" },
+    dateLabel: MAWLID_DATE,
+    duration: NIGHTS,
     stars: 4,
     services: [
+      FLIGHT,
       { fr: "Makkah : Manarat Ghazah 4*", en: "Makkah: Manarat Ghazah 4*" },
       { fr: "Medine : Arkan Al Manar (100m Haram, zone nord)", en: "Medina: Arkan Al Manar (100m from Haram, north zone)" },
-      { fr: "Vol Tunisair / Saudia aller-retour", en: "Tunisair / Saudia round-trip flight" },
-      { fr: "Visa Omra + transferts + excursions (ziyarat)", en: "Umrah visa + transfers + excursions (ziyarat)" },
+      INCLUDED,
     ],
+    notIncluded: NOT_INCLUDED,
     prices: [
       { people: 4, val: "4 550" },
       { people: 3, val: "4 850" },
@@ -190,27 +240,56 @@ export const umrahPacks: UmrahPack[] = [
     ],
   },
   {
-    name: { fr: "VIP", en: "VIP" },
+    name: { fr: "Prestige", en: "Prestige" },
     img: "/hero/omra-vip.png",
-    dateLabel: { fr: "Depart le 20 juillet 2026", en: "Departs July 20, 2026" },
-    otherDates: {
-      fr: "Aussi les 23, 27 juillet et 3, 6, 10 aout 2026",
-      en: "Also July 23, 27 and August 3, 6, 10, 2026",
-    },
-    duration: { fr: "7 nuits Medine + 7 nuits Makkah", en: "7 nights Medina + 7 nights Makkah" },
+    dateLabel: MAWLID_DATE,
+    duration: NIGHTS,
+    stars: 5,
+    services: [
+      FLIGHT,
+      { fr: "Makkah : Ash-Shuhada 5*, petit-dejeuner, rue Ajyad", en: "Makkah: Ash-Shuhada 5*, breakfast, Ajyad street" },
+      { fr: "Medine : Arkan Al Manar (100m Haram, zone nord)", en: "Medina: Arkan Al Manar (100m from Haram, north zone)" },
+      INCLUDED,
+    ],
+    notIncluded: NOT_INCLUDED,
+    prices: [
+      { people: 4, val: "5 400" },
+      { people: 3, val: "5 850" },
+      { people: 2, val: "6 400" },
+    ],
+  },
+  {
+    name: { fr: "VIP+", en: "VIP+" },
+    img: "/hero/omra-vip.png",
+    dateLabel: MAWLID_DATE,
+    duration: NIGHTS,
     stars: 5,
     highlight: true,
     services: [
-      { fr: "Makkah : Abraj Al Safwa 5*, vue Haram, avec petit-dejeuner", en: "Makkah: Abraj Al Safwa 5*, Haram view, breakfast included" },
+      FLIGHT,
+      { fr: "Makkah : Abraj Al Safwa 5*, vue Haram, petit-dejeuner", en: "Makkah: Abraj Al Safwa 5*, Haram view, breakfast" },
       { fr: "Medine : Arkan Al Manar (100m Haram, zone nord)", en: "Medina: Arkan Al Manar (100m from Haram, north zone)" },
-      { fr: "Vol Tunisair / Saudia aller-retour", en: "Tunisair / Saudia round-trip flight" },
-      { fr: "Visa Omra + transferts + excursions (ziyarat)", en: "Umrah visa + transfers + excursions (ziyarat)" },
+      INCLUDED,
     ],
+    notIncluded: NOT_INCLUDED,
     prices: [
-      { people: 4, val: "5 200" },
-      { people: 3, val: "5 800" },
-      { people: 2, val: "6 300" },
+      { people: 4, val: "5 850" },
+      { people: 3, val: "6 300" },
+      { people: 2, val: "6 950" },
     ],
+  },
+  {
+    name: { fr: "A la Carte", en: "A la Carte" },
+    img: "/hero/omra-essentiel.png",
+    dateLabel: { fr: "Formule sur mesure", en: "Tailor-made package" },
+    duration: NIGHTS,
+    stars: 5,
+    services: [
+      { fr: "Voyage personnalise selon vos souhaits : hotels, dates, duree et categorie", en: "Fully customized trip: hotels, dates, duration and category" },
+      { fr: "Ideal pour familles et groupes", en: "Ideal for families and groups" },
+    ],
+    prices: [],
+    priceNote: { fr: "Devis personnalise sur demande", en: "Custom quote on request" },
   },
 ];
 
@@ -269,23 +348,6 @@ export const umrahMoreDepartures: UmrahPack[] = [
     ],
   },
   {
-    name: { fr: "Mawlid - Ash-Shuhada", en: "Mawlid - Ash-Shuhada" },
-    dateLabel: { fr: "25 aout 2026", en: "August 25, 2026" },
-    duration: { fr: "7 nuits Medine + 7 nuits Makkah", en: "7 nights Medina + 7 nights Makkah" },
-    stars: 5,
-    services: [
-      { fr: "Makkah : Ash-Shuhada 5*, avec petit-dejeuner, rue Ajyad", en: "Makkah: Ash-Shuhada 5*, breakfast included, Ajyad street" },
-      { fr: "Medine : Arkan Al Manar (100m Haram, zone nord)", en: "Medina: Arkan Al Manar (100m from Haram, north zone)" },
-      { fr: "Vol Tunisair / Saudia aller-retour", en: "Tunisair / Saudia round-trip flight" },
-      { fr: "Visa Omra + transferts + excursions (ziyarat)", en: "Umrah visa + transfers + excursions (ziyarat)" },
-    ],
-    prices: [
-      { people: 4, val: "5 400" },
-      { people: 3, val: "5 850" },
-      { people: 2, val: "6 400" },
-    ],
-  },
-  {
     name: { fr: "Mawlid - Hilton Marriott", en: "Mawlid - Hilton Marriott" },
     dateLabel: { fr: "25 aout 2026", en: "August 25, 2026" },
     duration: { fr: "7 nuits Medine + 7 nuits Makkah", en: "7 nights Medina + 7 nights Makkah" },
@@ -300,23 +362,6 @@ export const umrahMoreDepartures: UmrahPack[] = [
       { people: 4, val: "5 650" },
       { people: 3, val: "6 100" },
       { people: 2, val: "6 800" },
-    ],
-  },
-  {
-    name: { fr: "Mawlid - Abraj Al Safwa", en: "Mawlid - Abraj Al Safwa" },
-    dateLabel: { fr: "25 aout 2026", en: "August 25, 2026" },
-    duration: { fr: "7 nuits Medine + 7 nuits Makkah", en: "7 nights Medina + 7 nights Makkah" },
-    stars: 5,
-    services: [
-      { fr: "Makkah : Abraj Al Safwa 5*, vue Haram, avec petit-dejeuner", en: "Makkah: Abraj Al Safwa 5*, Haram view, breakfast included" },
-      { fr: "Medine : Arkan Al Manar (100m Haram, zone nord)", en: "Medina: Arkan Al Manar (100m from Haram, north zone)" },
-      { fr: "Vol Tunisair / Saudia aller-retour", en: "Tunisair / Saudia round-trip flight" },
-      { fr: "Visa Omra + transferts + excursions (ziyarat)", en: "Umrah visa + transfers + excursions (ziyarat)" },
-    ],
-    prices: [
-      { people: 4, val: "5 850" },
-      { people: 3, val: "6 300" },
-      { people: 2, val: "6 950" },
     ],
   },
 ];
