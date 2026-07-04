@@ -155,10 +155,10 @@ export const travelPacks: { id: string; img: string; title: L; desc: L; waMsg: s
   },
   {
     id: "transfert",
-    img: "/hero/dubai.jpg",
+    img: "/packs/transfert.jpg",
     title: { fr: "Transfert", en: "Transfers" },
-    desc: { fr: "Transferts aeroport et deplacements sur place.", en: "Airport transfers and local transport." },
-    waMsg: "Bonjour, je souhaite un service de transfert.",
+    desc: { fr: "Voiture de luxe avec chauffeur : transferts aeroport et deplacements sur place.", en: "Luxury car with chauffeur: airport transfers and local transport." },
+    waMsg: "Bonjour, je souhaite un service de transfert (voiture avec chauffeur).",
   },
   {
     id: "bungalows",

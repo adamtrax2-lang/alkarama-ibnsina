@@ -385,42 +385,141 @@ export function Partners() {
 
 /* ---------------- Connect (social media cards, EliteMasar style) ---------------- */
 export function Connect() {
-  const { tr } = useLang();
-  const socials = [
-    { label: "Facebook", handle: "AlKarama Ibn Sina", href: business.facebook, icon: Icon.facebook, header: "bg-[#1877F2]", btn: "bg-[#1877F2] hover:bg-[#1466d6]" },
-    { label: "Instagram", handle: "@alkarama.ibnsina.agency", href: business.instagram, icon: Icon.instagram, header: "instagram-grad", btn: "instagram-grad hover:opacity-90" },
-    { label: "TikTok", handle: "@alkaramaibnsina", href: business.tiktok, icon: Icon.tiktok, header: "bg-black", btn: "bg-black hover:bg-charcoal" },
-    { label: "YouTube", handle: "AlKarama Ibn Sina", href: business.youtube, icon: Icon.youtube, header: "bg-[#FF0000]", btn: "bg-[#FF0000] hover:bg-[#d60000]" },
-    { label: "X", handle: "AlKarama Ibn Sina", href: business.x, icon: Icon.x, header: "bg-black", btn: "bg-black hover:bg-charcoal" },
-  ].filter((s) => s.href); // X + YouTube appear automatically once their URLs are set in data.ts
+  const { tr, lang } = useLang();
+  const AV = "/brand/avatar.png";
+  const LG = "/brand/logo-white.png";
+  const NAME = "AlKarama Ibn Sina";
+
+  // NOTE: follower / like / view figures below are PLACEHOLDERS for the EliteMasar-style look.
+  // Replace them with the agency's real numbers when the client provides them.
+  const post =
+    lang === "fr"
+      ? "Nouvelles offres Omra 2026-2027 disponibles. Vols directs, hotels 4 et 5 etoiles, formules groupe et privees."
+      : "New 2026-2027 Umrah offers available. Direct flights, 4 and 5 star hotels, group and private packages.";
+  const igCaption =
+    lang === "fr"
+      ? "Vivez votre Omra en toute serenite avec AlKarama Ibn Sina."
+      : "Live your Umrah in serenity with AlKarama Ibn Sina.";
+  const followOn = (p: string) => (lang === "fr" ? `Suivre sur ${p}` : `Follow on ${p}`);
+  const grid = ["/hero/hajj.png", "/hotels/istanbul.jpg", "/hero/resort.jpg", "/dest/sharm.jpg", "/hero/cappadocia.jpg", "/hero/dubai.jpg"];
+
+  const Comment = ({ className = "" }: { className?: string }) => (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className={className}>
+      <path d="M21 15a2 2 0 0 1-2 2H8l-4 4V5a2 2 0 0 1 2-2h13a2 2 0 0 1 2 2z" strokeLinejoin="round" />
+    </svg>
+  );
+
   return (
     <section id="connect" className="bg-sand py-20">
       <div className="container-x">
-        <SectionHead kicker={tr("connect.kicker")} title={tr("connect.title")} sub={tr("connect.sub")} />
-        <div className="mx-auto flex max-w-5xl flex-wrap justify-center gap-5">
-          {socials.map((s) => (
-            <div key={s.label} className="flex w-full flex-col overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-charcoal/5 sm:w-[calc(50%-0.625rem)] lg:w-72">
-              <div className={`flex items-center gap-2.5 px-4 py-3 text-white ${s.header}`}>
-                <s.icon className="h-5 w-5" />
-                <span className="text-sm font-semibold">{s.label}</span>
+        <div className="mb-10 max-w-2xl">
+          <h2 className="section-title">{tr("connect.title")}</h2>
+          <span className="mt-3 block h-1 w-16 rounded bg-charcoal" />
+          <p className="mt-5 text-charcoal/60">{tr("connect.sub")}</p>
+        </div>
+
+        <div className="grid gap-6 lg:grid-cols-3">
+          {/* ---------- Facebook ---------- */}
+          <div className="flex flex-col overflow-hidden rounded-2xl bg-white shadow-lg ring-1 ring-charcoal/5">
+            <div className="flex items-center justify-between bg-[#1877F2] px-4 py-3 text-white">
+              <span className="flex items-center gap-2 text-sm font-semibold"><Icon.facebook className="h-5 w-5" /> {NAME}</span>
+              <a href={business.facebook} target="_blank" rel="noreferrer" className="text-sm hover:underline">{tr("connect.follow")}</a>
+            </div>
+            <div className="relative grid h-24 place-items-center bg-gradient-to-br from-charcoal to-charcoal-soft">
+              <img src={LG} alt="" className="h-11 w-auto opacity-90" />
+            </div>
+            <div className="relative px-4 pb-3 pt-8">
+              <img src={AV} alt="" className="absolute -top-7 left-4 h-14 w-14 rounded-full object-cover ring-4 ring-white" />
+              <p className="font-semibold text-charcoal">{NAME}</p>
+              <p className="text-xs text-charcoal/50">{lang === "fr" ? "Agence de voyage" : "Travel Agency"} · 3 200 {lang === "fr" ? "abonnes" : "followers"}</p>
+            </div>
+            <div className="border-t border-charcoal/10 px-4 py-3">
+              <div className="flex items-center gap-2">
+                <img src={AV} alt="" className="h-8 w-8 rounded-full object-cover" />
+                <div className="leading-tight">
+                  <p className="text-xs font-semibold text-charcoal">{NAME}</p>
+                  <p className="text-[10px] text-charcoal/40">{lang === "fr" ? "il y a 2 heures" : "2 hours ago"}</p>
+                </div>
               </div>
-              <div className="flex flex-1 flex-col items-center gap-2 px-4 py-6 text-center">
-                <span className="grid h-14 w-14 place-items-center rounded-full bg-cream text-charcoal ring-1 ring-charcoal/10">
-                  <s.icon className="h-7 w-7" />
-                </span>
-                <p className="text-sm font-semibold text-charcoal">{business.name}</p>
-                <p className="text-xs text-charcoal/55">{s.handle}</p>
-              </div>
-              <a
-                href={s.href}
-                target="_blank"
-                rel="noreferrer"
-                className={`m-4 mt-0 inline-flex items-center justify-center gap-2 rounded-full py-2.5 text-sm font-semibold text-white transition ${s.btn}`}
-              >
-                <s.icon className="h-4 w-4" /> {tr("connect.follow")}
+              <p className="mt-2 text-xs leading-relaxed text-charcoal/70">{post}</p>
+            </div>
+            <img src="/hero/hajj.png" alt="" className="h-44 w-full object-cover" />
+            <div className="flex items-center gap-5 px-4 py-2.5 text-xs text-charcoal/50">
+              <span className="flex items-center gap-1"><Icon.heart className="h-4 w-4 text-[#f0356e]" /> 1,2k</span>
+              <span className="flex items-center gap-1"><Comment className="h-4 w-4" /> 89</span>
+              <span className="ml-auto">45 {lang === "fr" ? "partages" : "shares"}</span>
+            </div>
+            <div className="mt-auto p-3">
+              <a href={business.facebook} target="_blank" rel="noreferrer" className="flex w-full items-center justify-center gap-2 rounded-lg bg-[#1877F2] py-2.5 text-sm font-semibold text-white transition hover:bg-[#1466d6]">
+                <Icon.facebook className="h-4 w-4" /> {followOn("Facebook")}
               </a>
             </div>
-          ))}
+          </div>
+
+          {/* ---------- Instagram ---------- */}
+          <div className="flex flex-col overflow-hidden rounded-2xl bg-white shadow-lg ring-1 ring-charcoal/5">
+            <div className="instagram-grad flex items-center justify-between px-4 py-3 text-white">
+              <span className="flex items-center gap-2 text-sm font-semibold"><Icon.instagram className="h-5 w-5" /> @alkarama.ibnsina.agency</span>
+              <a href={business.instagram} target="_blank" rel="noreferrer" className="text-sm hover:underline">{tr("connect.follow")}</a>
+            </div>
+            <div className="flex items-center gap-3 px-4 py-4">
+              <img src={AV} alt="" className="h-12 w-12 rounded-full object-cover ring-1 ring-charcoal/10" />
+              <div>
+                <p className="text-sm font-semibold text-charcoal">{NAME}</p>
+                <p className="text-xs text-charcoal/50">240 {lang === "fr" ? "publications" : "posts"} · 18,5k {lang === "fr" ? "abonnes" : "followers"}</p>
+              </div>
+            </div>
+            <div className="grid grid-cols-3 gap-0.5">
+              {grid.map((g, i) => (
+                <img key={i} src={g} alt="" className="aspect-square w-full object-cover" />
+              ))}
+            </div>
+            <div className="px-4 py-3">
+              <p className="text-xs text-charcoal/70"><span className="font-semibold text-charcoal">alkarama.ibnsina.agency</span> {igCaption}</p>
+              <div className="mt-2 flex items-center gap-5 text-xs text-charcoal/50">
+                <span className="flex items-center gap-1"><Icon.heart className="h-4 w-4 text-[#f0356e]" /> 3,4k</span>
+                <span className="flex items-center gap-1"><Comment className="h-4 w-4" /> 128</span>
+              </div>
+            </div>
+            <div className="mt-auto p-3">
+              <a href={business.instagram} target="_blank" rel="noreferrer" className="instagram-grad flex w-full items-center justify-center gap-2 rounded-lg py-2.5 text-sm font-semibold text-white transition hover:opacity-90">
+                <Icon.instagram className="h-4 w-4" /> {followOn("Instagram")}
+              </a>
+            </div>
+          </div>
+
+          {/* ---------- TikTok ---------- */}
+          <div className="flex flex-col overflow-hidden rounded-2xl bg-white shadow-lg ring-1 ring-charcoal/5">
+            <div className="flex items-center justify-between bg-black px-4 py-3 text-white">
+              <span className="flex items-center gap-2 text-sm font-semibold"><Icon.tiktok className="h-5 w-5" /> @alkaramaibnsina</span>
+              <a href={business.tiktok} target="_blank" rel="noreferrer" className="text-sm hover:underline">{tr("connect.follow")}</a>
+            </div>
+            <div className="relative grid h-24 place-items-center bg-gradient-to-br from-charcoal to-charcoal-soft">
+              <img src={LG} alt="" className="h-11 w-auto opacity-90" />
+            </div>
+            <div className="relative px-4 pb-3 pt-8">
+              <img src={AV} alt="" className="absolute -top-7 left-4 h-14 w-14 rounded-full object-cover ring-4 ring-white" />
+              <p className="font-semibold text-charcoal">{NAME}</p>
+              <p className="text-xs text-charcoal/50">12,4k {lang === "fr" ? "abonnes" : "followers"} · 89,2k {lang === "fr" ? "j'aime" : "likes"}</p>
+            </div>
+            <div className="px-4 pb-3">
+              <p className="text-xs leading-relaxed text-charcoal/70">{lang === "fr" ? "Agence de voyage a Tunis. Omra, sejours, visas et billetterie." : "Travel agency in Tunis. Umrah, stays, visas and ticketing."}</p>
+            </div>
+            <div className="relative">
+              <img src="/hero/mecca.jpg" alt="" className="h-44 w-full object-cover" />
+              <span className="absolute inset-0 grid place-items-center">
+                <span className="grid h-12 w-12 place-items-center rounded-full bg-black/60 text-white">
+                  <svg viewBox="0 0 24 24" fill="currentColor" className="h-5 w-5"><path d="M8 5v14l11-7z" /></svg>
+                </span>
+              </span>
+              <span className="absolute bottom-2 right-3 rounded bg-black/60 px-2 py-0.5 text-[11px] font-medium text-white">78,4k {lang === "fr" ? "vues" : "views"}</span>
+            </div>
+            <div className="mt-auto p-3">
+              <a href={business.tiktok} target="_blank" rel="noreferrer" className="flex w-full items-center justify-center gap-2 rounded-lg bg-black py-2.5 text-sm font-semibold text-white transition hover:bg-charcoal">
+                <Icon.tiktok className="h-4 w-4" /> {followOn("TikTok")}
+              </a>
+            </div>
+          </div>
         </div>
       </div>
     </section>
