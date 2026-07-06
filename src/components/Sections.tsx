@@ -403,12 +403,6 @@ export function Connect() {
   const followOn = (p: string) => (lang === "fr" ? `Suivre sur ${p}` : `Follow on ${p}`);
   const grid = ["/hero/hajj.png", "/hotels/istanbul.jpg", "/hero/resort.jpg", "/dest/sharm.jpg", "/hero/cappadocia.jpg", "/hero/dubai.jpg"];
 
-  const Comment = ({ className = "" }: { className?: string }) => (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className={className}>
-      <path d="M21 15a2 2 0 0 1-2 2H8l-4 4V5a2 2 0 0 1 2-2h13a2 2 0 0 1 2 2z" strokeLinejoin="round" />
-    </svg>
-  );
-
   return (
     <section id="connect" className="bg-sand py-20">
       <div className="container-x">
@@ -431,7 +425,7 @@ export function Connect() {
             <div className="relative px-4 pb-3 pt-8">
               <img src={AV} alt="" className="absolute -top-7 left-4 h-14 w-14 rounded-full object-cover ring-4 ring-white" />
               <p className="font-semibold text-charcoal">{NAME}</p>
-              <p className="text-xs text-charcoal/50">{lang === "fr" ? "Agence de voyage" : "Travel Agency"} · 3 200 {lang === "fr" ? "abonnes" : "followers"}</p>
+              <p className="text-xs text-charcoal/50">{lang === "fr" ? "Agence de voyage" : "Travel Agency"}</p>
             </div>
             <div className="border-t border-charcoal/10 px-4 py-3">
               <div className="flex items-center gap-2">
@@ -444,11 +438,6 @@ export function Connect() {
               <p className="mt-2 text-xs leading-relaxed text-charcoal/70">{post}</p>
             </div>
             <img src="/hero/hajj.png" alt="" className="h-44 w-full object-cover" />
-            <div className="flex items-center gap-5 px-4 py-2.5 text-xs text-charcoal/50">
-              <span className="flex items-center gap-1"><Icon.heart className="h-4 w-4 text-[#f0356e]" /> 1,2k</span>
-              <span className="flex items-center gap-1"><Comment className="h-4 w-4" /> 89</span>
-              <span className="ml-auto">45 {lang === "fr" ? "partages" : "shares"}</span>
-            </div>
             <div className="mt-auto p-3">
               <a href={business.facebook} target="_blank" rel="noreferrer" className="flex w-full items-center justify-center gap-2 rounded-lg bg-[#1877F2] py-2.5 text-sm font-semibold text-white transition hover:bg-[#1466d6]">
                 <Icon.facebook className="h-4 w-4" /> {followOn("Facebook")}
@@ -466,7 +455,7 @@ export function Connect() {
               <img src={AV} alt="" className="h-12 w-12 rounded-full object-cover ring-1 ring-charcoal/10" />
               <div>
                 <p className="text-sm font-semibold text-charcoal">{NAME}</p>
-                <p className="text-xs text-charcoal/50">240 {lang === "fr" ? "publications" : "posts"} · 18,5k {lang === "fr" ? "abonnes" : "followers"}</p>
+                <p className="text-xs text-charcoal/50">{lang === "fr" ? "Agence de voyage" : "Travel Agency"}</p>
               </div>
             </div>
             <div className="grid grid-cols-3 gap-0.5">
@@ -476,10 +465,6 @@ export function Connect() {
             </div>
             <div className="px-4 py-3">
               <p className="text-xs text-charcoal/70"><span className="font-semibold text-charcoal">alkarama.ibnsina.agency</span> {igCaption}</p>
-              <div className="mt-2 flex items-center gap-5 text-xs text-charcoal/50">
-                <span className="flex items-center gap-1"><Icon.heart className="h-4 w-4 text-[#f0356e]" /> 3,4k</span>
-                <span className="flex items-center gap-1"><Comment className="h-4 w-4" /> 128</span>
-              </div>
             </div>
             <div className="mt-auto p-3">
               <a href={business.instagram} target="_blank" rel="noreferrer" className="instagram-grad flex w-full items-center justify-center gap-2 rounded-lg py-2.5 text-sm font-semibold text-white transition hover:opacity-90">
@@ -500,7 +485,7 @@ export function Connect() {
             <div className="relative px-4 pb-3 pt-8">
               <img src={AV} alt="" className="absolute -top-7 left-4 h-14 w-14 rounded-full object-cover ring-4 ring-white" />
               <p className="font-semibold text-charcoal">{NAME}</p>
-              <p className="text-xs text-charcoal/50">12,4k {lang === "fr" ? "abonnes" : "followers"} · 89,2k {lang === "fr" ? "j'aime" : "likes"}</p>
+              <p className="text-xs text-charcoal/50">{lang === "fr" ? "Agence de voyage" : "Travel Agency"}</p>
             </div>
             <div className="px-4 pb-3">
               <p className="text-xs leading-relaxed text-charcoal/70">{lang === "fr" ? "Agence de voyage a Tunis. Omra, sejours, visas et billetterie." : "Travel agency in Tunis. Umrah, stays, visas and ticketing."}</p>
@@ -512,7 +497,6 @@ export function Connect() {
                   <svg viewBox="0 0 24 24" fill="currentColor" className="h-5 w-5"><path d="M8 5v14l11-7z" /></svg>
                 </span>
               </span>
-              <span className="absolute bottom-2 right-3 rounded bg-black/60 px-2 py-0.5 text-[11px] font-medium text-white">78,4k {lang === "fr" ? "vues" : "views"}</span>
             </div>
             <div className="mt-auto p-3">
               <a href={business.tiktok} target="_blank" rel="noreferrer" className="flex w-full items-center justify-center gap-2 rounded-lg bg-black py-2.5 text-sm font-semibold text-white transition hover:bg-charcoal">
@@ -520,6 +504,61 @@ export function Connect() {
               </a>
             </div>
           </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ---------------- Video (YouTube embed, hidden if no link is set) ---------------- */
+function youtubeEmbedUrl(url: string): string | null {
+  try {
+    const u = new URL(url);
+    let id = "";
+    if (u.hostname.includes("youtu.be")) id = u.pathname.slice(1);
+    else if (u.pathname.startsWith("/embed/")) id = u.pathname.replace("/embed/", "");
+    else id = u.searchParams.get("v") ?? "";
+    return id ? `https://www.youtube.com/embed/${id}` : null;
+  } catch {
+    return null;
+  }
+}
+
+export function Video() {
+  const { tr } = useLang();
+  const { content } = useContent();
+  const embedUrl = youtubeEmbedUrl(content.business.featuredVideoUrl);
+  if (!embedUrl) return null;
+
+  return (
+    <section id="video" className="bg-white py-20">
+      <div className="container-x">
+        <div className="mx-auto mb-10 max-w-2xl text-center">
+          <p className="eyebrow text-gold">{tr("video.kicker")}</p>
+          <h2 className="section-title mt-3">{tr("video.title")}</h2>
+          <p className="mt-4 text-charcoal/60">{tr("video.sub")}</p>
+          <span className="mx-auto mt-5 block h-0.5 w-20 rounded bg-gold" />
+        </div>
+        <div className="mx-auto max-w-3xl overflow-hidden rounded-2xl shadow-lg ring-1 ring-charcoal/5">
+          <div className="aspect-video w-full">
+            <iframe
+              src={embedUrl}
+              title={tr("video.title")}
+              className="h-full w-full"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+            />
+          </div>
+        </div>
+        <div className="mt-6 text-center">
+          <a
+            href={content.business.featuredVideoUrl}
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex items-center gap-2 rounded-full bg-charcoal px-6 py-3 text-sm font-semibold text-white transition hover:bg-charcoal-soft"
+          >
+            {tr("video.watchOn")}
+          </a>
         </div>
       </div>
     </section>

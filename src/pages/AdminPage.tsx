@@ -333,6 +333,13 @@ function ContactEditor({ business, onChange }: { business: Business; onChange: (
         <div className="sm:col-span-2">
           <TextInput label="Lien Instagram" value={business.instagram} onChange={(v) => set({ instagram: v })} />
         </div>
+        <div className="sm:col-span-2">
+          <TextInput
+            label="Lien video YouTube (a afficher sur le site)"
+            value={business.featuredVideoUrl}
+            onChange={(v) => set({ featuredVideoUrl: v })}
+          />
+        </div>
       </div>
     </Card>
   );

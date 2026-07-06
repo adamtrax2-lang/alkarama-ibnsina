@@ -98,6 +98,14 @@ export const t: Dict = {
   },
   "connect.follow": { fr: "Suivre", en: "Follow" },
 
+  "video.kicker": { fr: "Video", en: "Video" },
+  "video.title": { fr: "Retrouvez-nous en video", en: "Watch us on video" },
+  "video.sub": {
+    fr: "Le fondateur presente nos offres Omra et hotels dans cette video / cet episode de podcast.",
+    en: "Our founder presents our Umrah and hotel offers in this video / podcast episode.",
+  },
+  "video.watchOn": { fr: "Voir sur YouTube", en: "Watch on YouTube" },
+
   "reviews.kicker": { fr: "Avis clients", en: "Reviews" },
   "reviews.title": { fr: "Ils nous font confiance", en: "They trust us" },
   "reviews.sub": { fr: "5.0 sur 15 avis Google", en: "5.0 from 15 Google reviews" },

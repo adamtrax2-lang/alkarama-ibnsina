@@ -18,6 +18,9 @@ export const business = {
   // so filling these strings later is all it takes to switch them on.
   x: "",
   youtube: "",
+  // Link to a specific YouTube video/podcast episode to embed on the site (any youtube.com or
+  // youtu.be URL works). Leave blank to hide the "Video" section entirely.
+  featuredVideoUrl: "https://www.youtube.com/watch?v=jDT8hsjCtpY",
 };
 
 export const wa = (msg: string) =>
@@ -221,25 +224,6 @@ export const umrahPacks: UmrahPack[] = [
     ],
   },
   {
-    name: { fr: "Confort", en: "Confort" },
-    img: "/hero/omra-mawlid.png",
-    dateLabel: MAWLID_DATE,
-    duration: NIGHTS,
-    stars: 4,
-    services: [
-      FLIGHT,
-      { fr: "Makkah : Manarat Ghazah 4*", en: "Makkah: Manarat Ghazah 4*" },
-      { fr: "Medine : Arkan Al Manar (100m Haram, zone nord)", en: "Medina: Arkan Al Manar (100m from Haram, north zone)" },
-      INCLUDED,
-    ],
-    notIncluded: NOT_INCLUDED,
-    prices: [
-      { people: 4, val: "4 550" },
-      { people: 3, val: "4 850" },
-      { people: 2, val: "5 300" },
-    ],
-  },
-  {
     name: { fr: "Prestige", en: "Prestige" },
     img: "/hero/omra-vip.png",
     dateLabel: MAWLID_DATE,
@@ -278,6 +262,30 @@ export const umrahPacks: UmrahPack[] = [
       { people: 2, val: "6 950" },
     ],
   },
+];
+
+// Packs shown only on the full "/omra" listing (via "Decouvrir tout"), not on the homepage.
+// Confort and A la Carte moved here so the homepage keeps just 3 cards: Classique, Prestige, VIP+.
+export const umrahMoreDepartures: UmrahPack[] = [
+  {
+    name: { fr: "Confort", en: "Confort" },
+    img: "/hero/omra-mawlid.png",
+    dateLabel: MAWLID_DATE,
+    duration: NIGHTS,
+    stars: 4,
+    services: [
+      FLIGHT,
+      { fr: "Makkah : Manarat Ghazah 4*", en: "Makkah: Manarat Ghazah 4*" },
+      { fr: "Medine : Arkan Al Manar (100m Haram, zone nord)", en: "Medina: Arkan Al Manar (100m from Haram, north zone)" },
+      INCLUDED,
+    ],
+    notIncluded: NOT_INCLUDED,
+    prices: [
+      { people: 4, val: "4 550" },
+      { people: 3, val: "4 850" },
+      { people: 2, val: "5 300" },
+    ],
+  },
   {
     name: { fr: "A la Carte", en: "A la Carte" },
     img: "/hero/omra-essentiel.png",
@@ -291,11 +299,6 @@ export const umrahPacks: UmrahPack[] = [
     prices: [],
     priceNote: { fr: "Devis personnalise sur demande", en: "Custom quote on request" },
   },
-];
-
-// Other Mawlid Ennabaoui (25 aout 2026) hotel tiers, real data from the flyer, not yet shown
-// on the site: waiting on the "Decouvrir tout" full listing page.
-export const umrahMoreDepartures: UmrahPack[] = [
   {
     name: { fr: "Mawlid - Al Ayyam", en: "Mawlid - Al Ayyam" },
     dateLabel: { fr: "25 aout 2026", en: "August 25, 2026" },
