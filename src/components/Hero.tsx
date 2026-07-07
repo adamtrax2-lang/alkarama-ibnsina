@@ -100,24 +100,25 @@ export default function Hero() {
         </div>
       </div>
 
-      {/* Partner / affiliation logos, white, over the photo. Flows normally on mobile (avoids overlapping taller content), pinned to the bottom on desktop. */}
-      <div className="relative bg-gradient-to-t from-charcoal/60 to-transparent pb-8 pt-10 lg:absolute lg:inset-x-0 lg:bottom-0">
-        <div className="container-x flex flex-wrap items-center justify-center gap-x-12 gap-y-5 sm:gap-x-20">
-          {heroPartners.map((p) =>
+      {/* Partner / affiliation logos, over the photo, scrolling banner (all logos same footprint, Al Morchidoun + Tunisie Telecom in color). Flows normally on mobile (avoids overlapping taller content), pinned to the bottom on desktop. */}
+      <div className="relative overflow-hidden bg-gradient-to-t from-charcoal/60 to-transparent pb-8 pt-10 lg:absolute lg:inset-x-0 lg:bottom-0">
+        <div className="flex w-max animate-marquee items-center gap-14 sm:gap-20">
+          {[...heroPartners, ...heroPartners].map((p, idx) =>
             p.img ? (
-              <img
-                key={p.name}
-                src={p.img}
-                alt={p.name}
-                title={p.name}
-                className={`h-7 w-auto object-contain transition sm:h-9 ${
-                  p.color ? "opacity-95 hover:opacity-100" : "opacity-75 hover:opacity-100"
-                }`}
-              />
+              <div key={`${p.name}-${idx}`} className="flex h-9 w-28 shrink-0 items-center justify-center sm:h-11 sm:w-32">
+                <img
+                  src={p.img}
+                  alt={p.name}
+                  title={p.name}
+                  className={`max-h-full max-w-full object-contain transition ${
+                    p.color ? "opacity-95 hover:opacity-100" : "opacity-75 hover:opacity-100"
+                  }`}
+                />
+              </div>
             ) : (
               <span
-                key={p.name}
-                className="font-display text-lg font-semibold lowercase tracking-wide text-white/80"
+                key={`${p.name}-${idx}`}
+                className="shrink-0 font-display text-lg font-semibold lowercase tracking-wide text-white/80"
               >
                 {p.text}
               </span>

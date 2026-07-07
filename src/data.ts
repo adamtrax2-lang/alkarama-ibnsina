@@ -132,12 +132,12 @@ export const morchidoun = { name: "Al Morchidoun", img: "/partners/morchidoun.jp
 export const heroPartners: { name: string; img?: string; text?: string; color?: boolean }[] = [
   { name: "Saudi Tourism Authority", img: "/partners/saudi.png" },
   { name: "Amadeus", text: "amadeus" },
-  { name: "Al Morchidoun", img: "/partners/morchidoun-color.jpeg", color: true },
+  { name: "Al Morchidoun", img: "/partners/morchidoun-color.png", color: true },
   { name: "Inspiring Tunisia", img: "/partners/tunisia.png" },
   { name: "IATA", img: "/partners/iata.png" },
   { name: "Go Turkiye", img: "/partners/turkiye.png" },
   { name: "Star Assurances", img: "/partners/star-assurances.png" },
-  { name: "Tunisie Telecom", img: "/partners/tunisie-telecom.png" },
+  { name: "Tunisie Telecom", img: "/partners/tunisie-telecom.png", color: true },
   { name: "Ooredoo", img: "/partners/ooredoo.png" },
 ];
 
@@ -325,7 +325,7 @@ export const umrahMoreDepartures: UmrahPack[] = [
     priceNote: { fr: "Devis personnalise sur demande", en: "Custom quote on request" },
   },
   {
-    name: { fr: "Mawlid - Al Ayyam", en: "Mawlid - Al Ayyam" },
+    name: { fr: "Al Ayyam", en: "Al Ayyam" },
     img: "/hero/omra-essentiel.png",
     dateLabel: { fr: "25 aout 2026", en: "August 25, 2026" },
     duration: { fr: "7 nuits Medine + 7 nuits Makkah", en: "7 nights Medina + 7 nights Makkah" },
@@ -343,7 +343,7 @@ export const umrahMoreDepartures: UmrahPack[] = [
     ],
   },
   {
-    name: { fr: "Mawlid - Anfanti", en: "Mawlid - Anfanti" },
+    name: { fr: "Anfanti", en: "Anfanti" },
     img: "/hero/omra-vip.png",
     dateLabel: { fr: "25 aout 2026", en: "August 25, 2026" },
     duration: { fr: "7 nuits Medine + 7 nuits Makkah", en: "7 nights Medina + 7 nights Makkah" },
@@ -361,7 +361,7 @@ export const umrahMoreDepartures: UmrahPack[] = [
     ],
   },
   {
-    name: { fr: "Mawlid - Ramada", en: "Mawlid - Ramada" },
+    name: { fr: "Ramada", en: "Ramada" },
     img: "/hero/omra-mawlid.png",
     dateLabel: { fr: "25 aout 2026", en: "August 25, 2026" },
     duration: { fr: "7 nuits Medine + 7 nuits Makkah", en: "7 nights Medina + 7 nights Makkah" },
@@ -379,7 +379,7 @@ export const umrahMoreDepartures: UmrahPack[] = [
     ],
   },
   {
-    name: { fr: "Mawlid - Hilton Marriott", en: "Mawlid - Hilton Marriott" },
+    name: { fr: "Hilton Marriott", en: "Hilton Marriott" },
     img: "/hero/mecca.jpg",
     dateLabel: { fr: "25 aout 2026", en: "August 25, 2026" },
     duration: { fr: "7 nuits Medine + 7 nuits Makkah", en: "7 nights Medina + 7 nights Makkah" },

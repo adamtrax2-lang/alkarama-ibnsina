@@ -249,7 +249,7 @@ export function Hotels() {
 export function Visas() {
   const { tr, lang } = useLang();
   return (
-    <section id="visas" className="bg-sand py-20">
+    <section id="visas" className="bg-cream py-20">
       <div className="container-x">
         <SectionHead kicker={tr("visas.kicker")} title={tr("visas.title")} sub={tr("visas.sub")} />
         <DiscoverAll to="/visas" />
@@ -299,7 +299,7 @@ export function Visas() {
 export function Billets() {
   const { tr, lang } = useLang();
   return (
-    <section id="billets" className="bg-cream py-20">
+    <section id="billets" className="bg-sand py-20">
       <div className="container-x">
         <SectionHead kicker={tr("billets.kicker")} title={tr("billets.title")} sub={tr("billets.sub")} />
         <DiscoverAll to="/reserver-billet" />
@@ -365,8 +365,8 @@ export function TravelPacks() {
           ))}
         </div>
 
-        {/* Extra services included, shown as a compact icon strip (not full pack cards) */}
-        <div className="mt-10 flex flex-wrap justify-center gap-4">
+        {/* Extra services included, shown as feature cards matching the site's card language */}
+        <div className="mx-auto mt-10 grid max-w-3xl gap-5 sm:grid-cols-2">
           {includedServices.map((s) => {
             const ServiceIcon = Icon[s.icon];
             return (
@@ -375,12 +375,17 @@ export function TravelPacks() {
                 href={wa(s.waMsg)}
                 target="_blank"
                 rel="noreferrer"
-                className="flex items-center gap-3 rounded-full bg-white px-5 py-3 shadow-sm ring-1 ring-charcoal/5 transition hover:shadow-md"
+                className="group flex items-center gap-4 rounded-2xl bg-white p-5 shadow-sm ring-1 ring-charcoal/5 transition hover:-translate-y-0.5 hover:shadow-lg"
               >
-                <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-gold/15 text-gold-dark">
-                  <ServiceIcon className="h-5 w-5" />
+                <span className="grid h-14 w-14 shrink-0 place-items-center rounded-2xl bg-gold/15 text-gold-dark transition group-hover:bg-gold group-hover:text-white">
+                  <ServiceIcon className="h-7 w-7" />
                 </span>
-                <span className="text-sm font-medium text-charcoal">{s.title[lang]}</span>
+                <div className="flex-1">
+                  <p className="font-medium text-charcoal">{s.title[lang]}</p>
+                </div>
+                <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-sand text-charcoal/40 transition group-hover:bg-gold group-hover:text-white">
+                  <Icon.arrow className="h-4 w-4 transition group-hover:translate-x-0.5" />
+                </span>
               </a>
             );
           })}

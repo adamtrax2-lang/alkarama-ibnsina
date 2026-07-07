@@ -16,8 +16,8 @@ export default function HomePage() {
     <>
       <Hero />
       <Omra />
-      <TravelPacks />
       <Hotels />
+      <TravelPacks />
       <Visas />
       <Billets />
       <WhyUs />

@@ -5,9 +5,9 @@ export default {
     extend: {
       colors: {
         gold: {
-          DEFAULT: "#D4AF37",
-          light: "#E9CE6B",
-          dark: "#B08D2D",
+          DEFAULT: "#FFC61A",
+          light: "#FFDD66",
+          dark: "#D9A400",
         },
         charcoal: {
           DEFAULT: "#222222",
@@ -33,11 +33,16 @@ export default {
           "0%": { opacity: "0", transform: "translateX(40px)" },
           "100%": { opacity: "1", transform: "translateX(0)" },
         },
+        marquee: {
+          "0%": { transform: "translateX(0)" },
+          "100%": { transform: "translateX(-50%)" },
+        },
       },
       animation: {
         kenburns: "kenburns 6s ease-out forwards",
         fadeup: "fadeup 0.7s ease-out forwards",
         slidein: "slidein 0.6s ease-out forwards",
+        marquee: "marquee 28s linear infinite",
       },
     },
   },
