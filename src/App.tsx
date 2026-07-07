@@ -8,6 +8,7 @@ import { Footer } from "./components/Sections";
 import HomePage from "./pages/HomePage";
 import OmraPage from "./pages/OmraPage";
 import HotelsPage from "./pages/HotelsPage";
+import DestinationsPage from "./pages/DestinationsPage";
 import VisasPage from "./pages/VisasPage";
 import BookingFormPage from "./pages/BookingFormPage";
 import AdminPage from "./pages/AdminPage";
@@ -42,6 +43,7 @@ function Shell() {
         <Route path="/" element={<HomePage />} />
         <Route path="/omra" element={<OmraPage />} />
         <Route path="/hotels" element={<HotelsPage />} />
+        <Route path="/destinations" element={<DestinationsPage />} />
         <Route path="/visas" element={<VisasPage />} />
         <Route path="/reserver-billet" element={<BookingFormPage />} />
       </Routes>

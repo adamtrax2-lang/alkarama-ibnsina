@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import Hero from "../components/Hero";
-import { Omra, TravelPacks, Hotels, Visas, Billets, Partners, WhyUs, Reviews, Connect, Video, Contact } from "../components/Sections";
+import { Omra, TravelPacks, Hotels, Visas, Billets, WhyUs, Reviews, Connect, Video, Contact } from "../components/Sections";
 
 export default function HomePage() {
   const location = useLocation();
@@ -20,7 +20,6 @@ export default function HomePage() {
       <Hotels />
       <Visas />
       <Billets />
-      <Partners />
       <WhyUs />
       <Reviews />
       <Video />

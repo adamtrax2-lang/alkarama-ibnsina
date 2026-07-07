@@ -31,8 +31,8 @@ export default function Hero() {
           />
         </div>
       ))}
-      <div className="absolute inset-0 bg-gradient-to-r from-charcoal/85 via-charcoal/55 to-charcoal/10" />
-      <div className="absolute inset-0 bg-gradient-to-t from-charcoal/80 via-transparent to-charcoal/30" />
+      <div className="absolute inset-0 bg-gradient-to-r from-charcoal/60 via-charcoal/30 to-transparent" />
+      <div className="absolute inset-0 bg-gradient-to-t from-charcoal/55 via-transparent to-charcoal/15" />
 
       {/* Content */}
       <div className="container-x relative flex flex-col justify-center gap-8 py-28 lg:h-full lg:flex-row lg:items-center lg:gap-10 lg:py-0 lg:pb-28 lg:pt-24">
@@ -42,20 +42,20 @@ export default function Hero() {
             <span className="inline-flex items-center gap-2 rounded-full bg-gold/90 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.2em] text-white">
               {slide.service[lang]}
             </span>
-            <h1 className="mt-5 max-w-2xl font-display text-4xl font-bold leading-[1.1] text-white sm:text-5xl lg:text-[3.4rem]">
+            <h1 className="mt-5 max-w-2xl font-display text-4xl font-bold leading-[1.1] text-white [text-shadow:0_2px_16px_rgba(0,0,0,0.65)] sm:text-5xl lg:text-[3.4rem]">
               {slide.headline[lang]}
             </h1>
-            <p className="mt-5 max-w-lg text-base text-white/85 sm:text-lg">{slide.tagline[lang]}</p>
+            <p className="mt-5 max-w-lg text-base text-white/90 [text-shadow:0_1px_10px_rgba(0,0,0,0.6)] sm:text-lg">{slide.tagline[lang]}</p>
           </div>
 
           {/* Right: featured card (visible on all sizes, stacked below on mobile) */}
           <div className="lg:col-span-5">
             <div
               key={`card-${i}`}
-              className="mx-auto max-w-sm animate-slidein overflow-hidden rounded-3xl border border-white/15 bg-white/10 backdrop-blur-md lg:ml-auto lg:mr-0"
+              className="mx-auto max-w-sm animate-slidein overflow-hidden rounded-3xl border border-white/15 bg-white/10 backdrop-blur-md sm:max-w-md lg:ml-auto lg:mr-0"
             >
               <div className="relative">
-                <img src={slide.cardImg ?? slide.img} alt="" className="h-32 w-full object-cover sm:h-40" />
+                <img src={slide.cardImg ?? slide.img} alt="" className="h-36 w-full object-cover sm:h-48" />
                 <span
                   className={`absolute left-3 top-3 rounded-full px-3 py-1 text-[11px] font-bold uppercase tracking-wide text-white shadow ${
                     slide.card.urgent ? "bg-red-500" : "bg-gold"
@@ -64,9 +64,9 @@ export default function Hero() {
                   {slide.card.badge[lang]}
                 </span>
               </div>
-              <div className="p-4 text-white sm:p-5">
+              <div className="p-5 text-white sm:p-6">
                 <h3 className="font-display text-lg font-semibold sm:text-xl">{slide.card.title[lang]}</h3>
-                <p className="mt-1 text-sm text-white/80">{slide.card.sub[lang]}</p>
+                <p className="mt-1.5 text-sm text-white/80">{slide.card.sub[lang]}</p>
                 <div className={`mt-4 flex items-center border-t border-white/15 pt-4 ${slide.card.price ? "justify-between" : "justify-end"}`}>
                   {slide.card.price && (
                     <div>
@@ -110,7 +110,9 @@ export default function Hero() {
                 src={p.img}
                 alt={p.name}
                 title={p.name}
-                className="h-7 w-auto object-contain opacity-75 transition hover:opacity-100 sm:h-9"
+                className={`h-7 w-auto object-contain transition sm:h-9 ${
+                  p.color ? "opacity-95 hover:opacity-100" : "opacity-75 hover:opacity-100"
+                }`}
               />
             ) : (
               <span

@@ -125,49 +125,74 @@ export const heroSlides: HeroSlide[] = [
 /* ---------- Partners ---------- */
 export const morchidoun = { name: "Al Morchidoun", img: "/partners/morchidoun.jpeg" };
 
-// White monochrome logos overlaid on the hero photo (EliteMasar style)
+// Partner logos overlaid on the hero photo (EliteMasar style), white/transparent except
+// Al Morchidoun which stays in color per client request. Single partners display on the
+// site now (client asked to drop the separate color "Nos Partenaires" section, keep only this row).
 // order deliberately mixed so it does not read as a copy of the reference site
-export const heroPartners: { name: string; img?: string; text?: string }[] = [
+export const heroPartners: { name: string; img?: string; text?: string; color?: boolean }[] = [
   { name: "Saudi Tourism Authority", img: "/partners/saudi.png" },
   { name: "Amadeus", text: "amadeus" },
-  { name: "Al Morchidoun", img: "/partners/morchidoun-white.png" },
+  { name: "Al Morchidoun", img: "/partners/morchidoun-color.jpeg", color: true },
   { name: "Inspiring Tunisia", img: "/partners/tunisia.png" },
   { name: "IATA", img: "/partners/iata.png" },
   { name: "Go Turkiye", img: "/partners/turkiye.png" },
+  { name: "Star Assurances", img: "/partners/star-assurances.png" },
+  { name: "Tunisie Telecom", img: "/partners/tunisie-telecom.png" },
+  { name: "Ooredoo", img: "/partners/ooredoo.png" },
 ];
 
-// Full-color partner logos for the dedicated "Nos Partenaires" section (client asked for color, not the white hero overlay).
-export const colorPartners: { name: string; img: string }[] = [
-  { name: "Al Morchidoun", img: "/partners/morchidoun-color.jpeg" },
-  { name: "Saudi Tourism Authority", img: "/partners/saudi-color.png" },
-  { name: "IATA", img: "/partners/iata-color.png" },
-  { name: "Inspiring Tunisia", img: "/partners/tunisia-color.png" },
-  { name: "Go Turkiye", img: "/partners/turkiye-color.png" },
-];
+/* ---------- Destinations (image cards, EliteMasar "Destinations Packs" style) ---------- */
+// International destinations the agency organizes trips to. No prices shown per Adam's steer
+// (client didn't want to commit to numbers here) - just photo + "Reserver" / "Appelez-nous" -> WhatsApp.
+// 3 featured on the homepage; the rest (currently just Maldives) appear via "Decouvrir tout" on /packs.
+export type Destination = { id: string; img: string; title: L; desc: L; waMsg: string; featured?: boolean };
 
-/* ---------- Travel packs & extra services (image cards, EliteMasar "Destinations Packs" style) ---------- */
-// New service lines requested by the client. Photos are PLACEHOLDERS from existing assets
-// until he sends real images and prices for each.
-export const travelPacks: { id: string; img: string; title: L; desc: L; waMsg: string }[] = [
+export const destinations: Destination[] = [
   {
-    id: "voyage",
-    img: "/hero/cappadocia.jpg",
-    title: { fr: "Voyage Organise", en: "Organized Trips" },
-    desc: { fr: "Circuits cles en main : vols, hotels et excursions.", en: "Turnkey trips: flights, hotels and excursions." },
-    waMsg: "Bonjour, je suis interesse par un voyage organise.",
+    id: "caire",
+    img: "/hero/cairo.jpg",
+    title: { fr: "Le Caire", en: "Cairo" },
+    desc: { fr: "Pyramides de Gizeh, Nil et tresors pharaoniques.", en: "Pyramids of Giza, the Nile and pharaonic treasures." },
+    waMsg: "Bonjour, je suis interesse par un voyage au Caire.",
+    featured: true,
   },
   {
+    id: "istanbul",
+    img: "/hero/istanbul.jpg",
+    title: { fr: "Istanbul", en: "Istanbul" },
+    desc: { fr: "Entre Europe et Asie, mosquees et bazars historiques.", en: "Between Europe and Asia, historic mosques and bazaars." },
+    waMsg: "Bonjour, je suis interesse par un voyage a Istanbul.",
+    featured: true,
+  },
+  {
+    id: "bali",
+    img: "/packs/bali.jpg",
+    title: { fr: "Bali", en: "Bali" },
+    desc: { fr: "Rizieres, temples et plages paradisiaques.", en: "Rice terraces, temples and paradise beaches." },
+    waMsg: "Bonjour, je suis interesse par un voyage a Bali.",
+    featured: true,
+  },
+  {
+    id: "maldives",
+    img: "/packs/maldives.jpg",
+    title: { fr: "Maldives", en: "Maldives" },
+    desc: { fr: "Bungalows sur pilotis et lagons turquoise.", en: "Overwater bungalows and turquoise lagoons." },
+    waMsg: "Bonjour, je suis interesse par un voyage aux Maldives.",
+  },
+];
+
+// Extra services shown as a compact icon strip (not full pack cards) alongside destinations.
+export const includedServices: { id: string; icon: "car" | "bungalow"; title: L; waMsg: string }[] = [
+  {
     id: "transfert",
-    img: "/packs/transfert.jpg",
-    title: { fr: "Transfert", en: "Transfers" },
-    desc: { fr: "Voiture de luxe avec chauffeur : transferts aeroport et deplacements sur place.", en: "Luxury car with chauffeur: airport transfers and local transport." },
+    icon: "car",
+    title: { fr: "Transfert (voiture avec chauffeur)", en: "Transfer (car with driver)" },
     waMsg: "Bonjour, je souhaite un service de transfert (voiture avec chauffeur).",
   },
   {
     id: "bungalows",
-    img: "/hero/resort.jpg",
-    title: { fr: "Location de Bungalows", en: "Bungalow Rental" },
-    desc: { fr: "Sejours en bungalows, ideal familles et groupes.", en: "Bungalow stays, ideal for families and groups." },
+    icon: "bungalow",
+    title: { fr: "Location de bungalows", en: "Bungalow rental" },
     waMsg: "Bonjour, je souhaite louer un bungalow.",
   },
 ];
@@ -212,8 +237,8 @@ export const umrahPacks: UmrahPack[] = [
     stars: 4,
     services: [
       FLIGHT,
-      { fr: "Makkah : Ramada Dar Faiezine 4*", en: "Makkah: Ramada Dar Faiezine 4*" },
-      { fr: "Medine : Arkan Al Manar 4* ou Abraj Tabah 4*", en: "Medina: Arkan Al Manar 4* or Abraj Tabah 4*" },
+      { fr: "7 nuits, Makkah : Ramada Dar Faiezine 4*", en: "7 nights, Makkah: Ramada Dar Faiezine 4*" },
+      { fr: "7 nuits, Medine : Arkan Al Manar 4* ou Abraj Tabah 4*", en: "7 nights, Medina: Arkan Al Manar 4* or Abraj Tabah 4*" },
       INCLUDED,
     ],
     notIncluded: NOT_INCLUDED,
@@ -225,14 +250,14 @@ export const umrahPacks: UmrahPack[] = [
   },
   {
     name: { fr: "Prestige", en: "Prestige" },
-    img: "/hero/omra-vip.png",
+    img: "/hero/mecca.jpg",
     dateLabel: MAWLID_DATE,
     duration: NIGHTS,
     stars: 5,
     services: [
       FLIGHT,
-      { fr: "Makkah : Ash-Shuhada 5*, petit-dejeuner, rue Ajyad", en: "Makkah: Ash-Shuhada 5*, breakfast, Ajyad street" },
-      { fr: "Medine : Arkan Al Manar (100m Haram, zone nord)", en: "Medina: Arkan Al Manar (100m from Haram, north zone)" },
+      { fr: "7 nuits, Makkah : Ash-Shuhada 5*, petit-dejeuner, rue Ajyad", en: "7 nights, Makkah: Ash-Shuhada 5*, breakfast, Ajyad street" },
+      { fr: "7 nuits, Medine : Arkan Al Manar (100m Haram, zone nord)", en: "7 nights, Medina: Arkan Al Manar (100m from Haram, north zone)" },
       INCLUDED,
     ],
     notIncluded: NOT_INCLUDED,
@@ -251,8 +276,8 @@ export const umrahPacks: UmrahPack[] = [
     highlight: true,
     services: [
       FLIGHT,
-      { fr: "Makkah : Abraj Al Safwa 5*, vue Haram, petit-dejeuner", en: "Makkah: Abraj Al Safwa 5*, Haram view, breakfast" },
-      { fr: "Medine : Arkan Al Manar (100m Haram, zone nord)", en: "Medina: Arkan Al Manar (100m from Haram, north zone)" },
+      { fr: "7 nuits, Makkah : Abraj Al Safwa 5*, vue Haram, petit-dejeuner", en: "7 nights, Makkah: Abraj Al Safwa 5*, Haram view, breakfast" },
+      { fr: "7 nuits, Medine : Arkan Al Manar (100m Haram, zone nord)", en: "7 nights, Medina: Arkan Al Manar (100m from Haram, north zone)" },
       INCLUDED,
     ],
     notIncluded: NOT_INCLUDED,
@@ -275,8 +300,8 @@ export const umrahMoreDepartures: UmrahPack[] = [
     stars: 4,
     services: [
       FLIGHT,
-      { fr: "Makkah : Manarat Ghazah 4*", en: "Makkah: Manarat Ghazah 4*" },
-      { fr: "Medine : Arkan Al Manar (100m Haram, zone nord)", en: "Medina: Arkan Al Manar (100m from Haram, north zone)" },
+      { fr: "7 nuits, Makkah : Manarat Ghazah 4*", en: "7 nights, Makkah: Manarat Ghazah 4*" },
+      { fr: "7 nuits, Medine : Arkan Al Manar (100m Haram, zone nord)", en: "7 nights, Medina: Arkan Al Manar (100m from Haram, north zone)" },
       INCLUDED,
     ],
     notIncluded: NOT_INCLUDED,
@@ -288,7 +313,7 @@ export const umrahMoreDepartures: UmrahPack[] = [
   },
   {
     name: { fr: "A la Carte", en: "A la Carte" },
-    img: "/hero/omra-essentiel.png",
+    img: "/hero/hajj.png",
     dateLabel: { fr: "Formule sur mesure", en: "Tailor-made package" },
     duration: NIGHTS,
     stars: 5,
@@ -301,12 +326,13 @@ export const umrahMoreDepartures: UmrahPack[] = [
   },
   {
     name: { fr: "Mawlid - Al Ayyam", en: "Mawlid - Al Ayyam" },
+    img: "/hero/omra-essentiel.png",
     dateLabel: { fr: "25 aout 2026", en: "August 25, 2026" },
     duration: { fr: "7 nuits Medine + 7 nuits Makkah", en: "7 nights Medina + 7 nights Makkah" },
     stars: 4,
     services: [
-      { fr: "Makkah : Al Ayyam - Badr Massa 4*, rue Ajyad", en: "Makkah: Al Ayyam - Badr Massa 4*, Ajyad street" },
-      { fr: "Medine : Abraj Taba (face au Haram, zone nord)", en: "Medina: Abraj Taba (facing the Haram, north zone)" },
+      { fr: "7 nuits, Makkah : Al Ayyam - Badr Massa 4*, rue Ajyad", en: "7 nights, Makkah: Al Ayyam - Badr Massa 4*, Ajyad street" },
+      { fr: "7 nuits, Medine : Abraj Taba (face au Haram, zone nord)", en: "7 nights, Medina: Abraj Taba (facing the Haram, north zone)" },
       { fr: "Vol Tunisair / Saudia aller-retour", en: "Tunisair / Saudia round-trip flight" },
       { fr: "Visa Omra + transferts + excursions (ziyarat)", en: "Umrah visa + transfers + excursions (ziyarat)" },
     ],
@@ -318,12 +344,13 @@ export const umrahMoreDepartures: UmrahPack[] = [
   },
   {
     name: { fr: "Mawlid - Anfanti", en: "Mawlid - Anfanti" },
+    img: "/hero/omra-vip.png",
     dateLabel: { fr: "25 aout 2026", en: "August 25, 2026" },
     duration: { fr: "7 nuits Medine + 7 nuits Makkah", en: "7 nights Medina + 7 nights Makkah" },
     stars: 5,
     services: [
-      { fr: "Makkah : Anfanti 5*, rue Ajyad", en: "Makkah: Anfanti 5*, Ajyad street" },
-      { fr: "Medine : Arkan Al Manar (100m Haram, zone nord)", en: "Medina: Arkan Al Manar (100m from Haram, north zone)" },
+      { fr: "7 nuits, Makkah : Anfanti 5*, rue Ajyad", en: "7 nights, Makkah: Anfanti 5*, Ajyad street" },
+      { fr: "7 nuits, Medine : Arkan Al Manar (100m Haram, zone nord)", en: "7 nights, Medina: Arkan Al Manar (100m from Haram, north zone)" },
       { fr: "Vol Tunisair / Saudia aller-retour", en: "Tunisair / Saudia round-trip flight" },
       { fr: "Visa Omra + transferts + excursions (ziyarat)", en: "Umrah visa + transfers + excursions (ziyarat)" },
     ],
@@ -335,12 +362,13 @@ export const umrahMoreDepartures: UmrahPack[] = [
   },
   {
     name: { fr: "Mawlid - Ramada", en: "Mawlid - Ramada" },
+    img: "/hero/omra-mawlid.png",
     dateLabel: { fr: "25 aout 2026", en: "August 25, 2026" },
     duration: { fr: "7 nuits Medine + 7 nuits Makkah", en: "7 nights Medina + 7 nights Makkah" },
     stars: 4,
     services: [
-      { fr: "Makkah : Ramada 4* Massa Al Faizeen", en: "Makkah: Ramada 4* Massa Al Faizeen" },
-      { fr: "Medine : Abraj Taba (face au Haram, zone nord)", en: "Medina: Abraj Taba (facing the Haram, north zone)" },
+      { fr: "7 nuits, Makkah : Ramada 4* Massa Al Faizeen", en: "7 nights, Makkah: Ramada 4* Massa Al Faizeen" },
+      { fr: "7 nuits, Medine : Abraj Taba (face au Haram, zone nord)", en: "7 nights, Medina: Abraj Taba (facing the Haram, north zone)" },
       { fr: "Vol Tunisair / Saudia aller-retour", en: "Tunisair / Saudia round-trip flight" },
       { fr: "Visa Omra + transferts + excursions (ziyarat)", en: "Umrah visa + transfers + excursions (ziyarat)" },
     ],
@@ -352,12 +380,13 @@ export const umrahMoreDepartures: UmrahPack[] = [
   },
   {
     name: { fr: "Mawlid - Hilton Marriott", en: "Mawlid - Hilton Marriott" },
+    img: "/hero/mecca.jpg",
     dateLabel: { fr: "25 aout 2026", en: "August 25, 2026" },
     duration: { fr: "7 nuits Medine + 7 nuits Makkah", en: "7 nights Medina + 7 nights Makkah" },
     stars: 5,
     services: [
-      { fr: "Makkah : Hilton Marriott 5*, vue Haram, avec petit-dejeuner", en: "Makkah: Hilton Marriott 5*, Haram view, breakfast included" },
-      { fr: "Medine : Abraj Taba (face au Haram, zone nord)", en: "Medina: Abraj Taba (facing the Haram, north zone)" },
+      { fr: "7 nuits, Makkah : Hilton Marriott 5*, vue Haram, avec petit-dejeuner", en: "7 nights, Makkah: Hilton Marriott 5*, Haram view, breakfast included" },
+      { fr: "7 nuits, Medine : Abraj Taba (face au Haram, zone nord)", en: "7 nights, Medina: Abraj Taba (facing the Haram, north zone)" },
       { fr: "Vol Tunisair / Saudia aller-retour", en: "Tunisair / Saudia round-trip flight" },
       { fr: "Visa Omra + transferts + excursions (ziyarat)", en: "Umrah visa + transfers + excursions (ziyarat)" },
     ],

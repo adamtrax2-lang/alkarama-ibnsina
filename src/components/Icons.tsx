@@ -31,6 +31,22 @@ export const Icon = {
       <path d="M4 13l8-3 8 3M5 13V9h14v4M9 9V6h6v3M3 18c1.5 0 1.5 1 3 1s1.5-1 3-1 1.5 1 3 1 1.5-1 3-1 1.5 1 3 1" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   ),
+  car: (p: P) => (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" className={p.className}>
+      <path d="M4 16V11l2-4.5A2 2 0 0 1 7.8 5h8.4a2 2 0 0 1 1.8 1.5L20 11v5" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M3 16h18v2a1 1 0 0 1-1 1h-1.5a1 1 0 0 1-1-1v-1H6.5v1a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-2z" strokeLinejoin="round" />
+      <path d="M5 11h14" strokeLinecap="round" />
+      <circle cx="7.5" cy="16" r="1.2" />
+      <circle cx="16.5" cy="16" r="1.2" />
+    </svg>
+  ),
+  bungalow: (p: P) => (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" className={p.className}>
+      <path d="M3 11l9-6 9 6" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M5 10v9a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-9" strokeLinejoin="round" />
+      <path d="M9.5 20v-5a1 1 0 0 1 1-1h3a1 1 0 0 1 1 1v5" strokeLinejoin="round" />
+    </svg>
+  ),
   shield: (p: P) => (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" className={p.className}>
       <path d="M12 3l7 3v6c0 4-3 6.5-7 9-4-2.5-7-5-7-9V6l7-3z" strokeLinejoin="round" />

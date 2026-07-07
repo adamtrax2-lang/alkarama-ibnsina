@@ -162,6 +162,12 @@ export const t: Dict = {
   },
   "visasPage.countries": { fr: "Pays eligibles", en: "Eligible countries" },
 
+  "destinationsPage.title": { fr: "Toutes nos destinations", en: "All our destinations" },
+  "destinationsPage.sub": {
+    fr: "Voyages organises vers nos destinations internationales. Contactez-nous pour un devis personnalise.",
+    en: "Organized trips to our international destinations. Contact us for a custom quote.",
+  },
+
   "booking.kicker": { fr: "Billetterie", en: "Ticketing" },
   "booking.title": { fr: "Demande de reservation", en: "Booking request" },
   "booking.sub": {
