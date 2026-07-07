@@ -120,8 +120,8 @@ export const t: Dict = {
 
   "footer.rights": { fr: "Tous droits reserves.", en: "All rights reserved." },
   "footer.built": {
-    fr: "Site, SEO et presence IA concus par Krateon.tn",
-    en: "Website, SEO and AI presence designed by Krateon.tn",
+    fr: "Propulse par Krateon.tn",
+    en: "Powered by Krateon.tn",
   },
 
   "common.googleReviews": { fr: "avis Google", en: "Google reviews" },
