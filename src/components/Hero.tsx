@@ -75,11 +75,11 @@ export default function Hero() {
                     </div>
                   )}
                   {slide.card.formLink ? (
-                    <Link to={slide.card.formLink} className="btn-gold !px-5 !py-2.5">
+                    <Link to={slide.card.formLink} className="btn-green !px-5 !py-2.5">
                       <Icon.arrow className="h-4 w-4" /> {tr("hero.book")}
                     </Link>
                   ) : (
-                    <a href={wa(slide.card.waMsg)} target="_blank" rel="noreferrer" className="btn-gold !px-5 !py-2.5">
+                    <a href={wa(slide.card.waMsg)} target="_blank" rel="noreferrer" className="btn-green !px-5 !py-2.5">
                       <Icon.whatsapp className="h-4 w-4" /> {tr("hero.book")}
                     </a>
                   )}

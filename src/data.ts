@@ -137,7 +137,7 @@ export const heroPartners: { name: string; img?: string; text?: string; color?: 
   { name: "IATA", img: "/partners/iata.png" },
   { name: "Go Turkiye", img: "/partners/turkiye.png" },
   { name: "Star Assurances", img: "/partners/star-assurances.png" },
-  { name: "Tunisie Telecom", img: "/partners/tunisie-telecom.png", color: true },
+  { name: "Tunisie Telecom", img: "/partners/tunisie-telecom-white.png" },
   { name: "Ooredoo", img: "/partners/ooredoo.png" },
 ];
 
@@ -213,6 +213,7 @@ export type UmrahPack = {
   notIncluded?: L; // optional "Non inclus" line
   prices: { people: number; val: string }[];
   priceNote?: L; // shown instead of the price grid when prices are not yet available
+  departureDates?: string[]; // ISO dates (YYYY-MM-DD), drives the /omra calendar filter. Omit for "sur mesure" packs.
 };
 
 // Season 2026-2027 tiers requested by the client: Classique / Confort / Prestige / VIP+ / A la Carte.
@@ -226,6 +227,8 @@ const NOT_INCLUDED: L = { fr: "Non inclus : timbre de voyage", en: "Not included
 const FLIGHT: L = { fr: "Vol Tunis - Jeddah - Tunis (Tunisair / Saudia)", en: "Flight Tunis - Jeddah - Tunis (Tunisair / Saudia)" };
 const INCLUDED: L = { fr: "Inclus : transfert, assurance, visa Omra, mazarat", en: "Included: transfer, insurance, Umrah visa, ziyarat" };
 const MAWLID_DATE: L = { fr: "Depart 25 aout 2026 (Mawlid Ennabaoui)", en: "Departure August 25, 2026 (Mawlid)" };
+const CLASSIQUE_DATES = ["2026-07-20", "2026-07-23", "2026-07-27", "2026-08-03", "2026-08-06", "2026-08-10"];
+const MAWLID_DATES = ["2026-08-25"];
 
 export const umrahPacks: UmrahPack[] = [
   {
@@ -247,6 +250,7 @@ export const umrahPacks: UmrahPack[] = [
       { people: 3, val: "4 650" },
       { people: 2, val: "5 250" },
     ],
+    departureDates: CLASSIQUE_DATES,
   },
   {
     name: { fr: "Prestige", en: "Prestige" },
@@ -266,6 +270,7 @@ export const umrahPacks: UmrahPack[] = [
       { people: 3, val: "5 850" },
       { people: 2, val: "6 400" },
     ],
+    departureDates: MAWLID_DATES,
   },
   {
     name: { fr: "VIP+", en: "VIP+" },
@@ -286,6 +291,7 @@ export const umrahPacks: UmrahPack[] = [
       { people: 3, val: "6 300" },
       { people: 2, val: "6 950" },
     ],
+    departureDates: MAWLID_DATES,
   },
 ];
 
@@ -310,6 +316,7 @@ export const umrahMoreDepartures: UmrahPack[] = [
       { people: 3, val: "4 850" },
       { people: 2, val: "5 300" },
     ],
+    departureDates: MAWLID_DATES,
   },
   {
     name: { fr: "A la Carte", en: "A la Carte" },
@@ -324,8 +331,11 @@ export const umrahMoreDepartures: UmrahPack[] = [
     prices: [],
     priceNote: { fr: "Devis personnalise sur demande", en: "Custom quote on request" },
   },
+  // Below: additional hotel options for the same 25 aout Mawlid departure, at Confort (4*) or
+  // Prestige (5*) tier. Named by TIER, not by hotel, per the client's instruction; the actual
+  // hotel stays visible inside each card's service list.
   {
-    name: { fr: "Al Ayyam", en: "Al Ayyam" },
+    name: { fr: "Confort", en: "Confort" },
     img: "/hero/omra-essentiel.png",
     dateLabel: { fr: "25 aout 2026", en: "August 25, 2026" },
     duration: { fr: "7 nuits Medine + 7 nuits Makkah", en: "7 nights Medina + 7 nights Makkah" },
@@ -341,9 +351,10 @@ export const umrahMoreDepartures: UmrahPack[] = [
       { people: 3, val: "5 200" },
       { people: 2, val: "5 600" },
     ],
+    departureDates: MAWLID_DATES,
   },
   {
-    name: { fr: "Anfanti", en: "Anfanti" },
+    name: { fr: "Prestige", en: "Prestige" },
     img: "/hero/omra-vip.png",
     dateLabel: { fr: "25 aout 2026", en: "August 25, 2026" },
     duration: { fr: "7 nuits Medine + 7 nuits Makkah", en: "7 nights Medina + 7 nights Makkah" },
@@ -359,9 +370,10 @@ export const umrahMoreDepartures: UmrahPack[] = [
       { people: 3, val: "5 350" },
       { people: 2, val: "5 800" },
     ],
+    departureDates: MAWLID_DATES,
   },
   {
-    name: { fr: "Ramada", en: "Ramada" },
+    name: { fr: "Confort", en: "Confort" },
     img: "/hero/omra-mawlid.png",
     dateLabel: { fr: "25 aout 2026", en: "August 25, 2026" },
     duration: { fr: "7 nuits Medine + 7 nuits Makkah", en: "7 nights Medina + 7 nights Makkah" },
@@ -377,9 +389,10 @@ export const umrahMoreDepartures: UmrahPack[] = [
       { people: 3, val: "5 450" },
       { people: 2, val: "5 900" },
     ],
+    departureDates: MAWLID_DATES,
   },
   {
-    name: { fr: "Hilton Marriott", en: "Hilton Marriott" },
+    name: { fr: "Prestige", en: "Prestige" },
     img: "/hero/mecca.jpg",
     dateLabel: { fr: "25 aout 2026", en: "August 25, 2026" },
     duration: { fr: "7 nuits Medine + 7 nuits Makkah", en: "7 nights Medina + 7 nights Makkah" },
@@ -395,6 +408,7 @@ export const umrahMoreDepartures: UmrahPack[] = [
       { people: 3, val: "6 100" },
       { people: 2, val: "6 800" },
     ],
+    departureDates: MAWLID_DATES,
   },
 ];
 

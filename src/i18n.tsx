@@ -22,7 +22,7 @@ export const t: Dict = {
   "common.discoverAll": { fr: "Decouvrir tout", en: "View all" },
   "common.bookNow": { fr: "Reserver", en: "Book now" },
   "visas.included": { fr: "Inclus dans votre dossier", en: "Included in your file" },
-  "visas.apply": { fr: "Demander le visa", en: "Apply for visa" },
+  "visas.apply": { fr: "Plus d'informations", en: "More information" },
 
   "omra.kicker": { fr: "Packs Omra", en: "Umrah Packages" },
   "omra.title": { fr: "Nos Formules Omra saison 2026-2027", en: "Our Umrah packages, 2026-2027 season" },
@@ -119,7 +119,10 @@ export const t: Dict = {
   "contact.cta": { fr: "Reserver sur WhatsApp", en: "Book on WhatsApp" },
 
   "footer.rights": { fr: "Tous droits reserves.", en: "All rights reserved." },
-  "footer.built": { fr: "Site realise par Krateon", en: "Site by Krateon" },
+  "footer.built": {
+    fr: "Site, SEO et presence IA concus par Krateon.tn",
+    en: "Website, SEO and AI presence designed by Krateon.tn",
+  },
 
   "common.googleReviews": { fr: "avis Google", en: "Google reviews" },
   "common.from": { fr: "A partir de", en: "From" },
@@ -127,9 +130,14 @@ export const t: Dict = {
 
   "omraPage.title": { fr: "Toutes nos formules Omra saison 2026-2027", en: "All our Umrah packages, 2026-2027 season" },
   "omraPage.sub": {
-    fr: "Tous les departs et toutes les formules d'hotels disponibles. Contactez-nous pour reserver.",
-    en: "All departures and every hotel option available. Contact us to book.",
+    fr: "Choisissez une date de depart dans le calendrier pour voir les formules disponibles.",
+    en: "Pick a departure date on the calendar to see the available packages.",
   },
+  "omraPage.calendarTitle": { fr: "Choisissez une date de depart", en: "Choose a departure date" },
+  "omraPage.packsForDate": { fr: "Formules disponibles le", en: "Packages available on" },
+  "omraPage.noDate": { fr: "Selectionnez une date sur le calendrier pour voir les formules.", en: "Select a date on the calendar to see the packages." },
+  "omraPage.customTitle": { fr: "Formule sur mesure", en: "Tailor-made package" },
+  "omraPage.legendAvailable": { fr: "Depart disponible", en: "Departure available" },
 
   "hotelsPage.title": { fr: "Tous nos hotels", en: "All our hotels" },
   "hotelsPage.sub": {

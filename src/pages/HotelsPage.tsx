@@ -121,7 +121,7 @@ export default function HotelsPage() {
 
           <div className="mx-auto mt-12 max-w-xl rounded-2xl bg-white p-6 text-center shadow-sm">
             <p className="text-charcoal/70">{tr("hotelsPage.more")}</p>
-            <a href={wa(waSearchMsg())} target="_blank" rel="noreferrer" className="btn-gold mt-4">
+            <a href={wa(waSearchMsg())} target="_blank" rel="noreferrer" className="btn-green mt-4">
               <Icon.whatsapp className="h-4 w-4" /> {tr("hero.book")}
             </a>
           </div>

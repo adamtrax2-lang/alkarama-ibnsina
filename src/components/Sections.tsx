@@ -144,9 +144,7 @@ export function OmraPackCard({ p }: { p: UmrahPack }) {
           href={wa(`Bonjour, je suis interesse par la formule Omra ${p.name.fr}.`)}
           target="_blank"
           rel="noreferrer"
-          className={`mt-6 inline-flex w-full items-center justify-center gap-2 rounded-full py-3 text-sm font-semibold transition ${
-            hi ? "bg-charcoal text-white hover:bg-charcoal-soft" : "btn-green !w-full"
-          }`}
+          className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-full bg-emerald-600 py-3 text-sm font-semibold text-white shadow-lg shadow-emerald-600/20 transition hover:bg-emerald-700"
         >
           <Icon.whatsapp className="h-4 w-4" /> {tr("hero.book")}
         </a>
@@ -279,12 +277,12 @@ export function Visas() {
                   ))}
                 </ul>
                 <a
-                  href={wa(`Bonjour, je souhaite un visa (${v.name.fr}).`)}
+                  href={wa(`Bonjour, je souhaite plus d'informations sur le visa (${v.name.fr}).`)}
                   target="_blank"
                   rel="noreferrer"
-                  className="btn-gold mt-5"
+                  className="btn-green mt-5"
                 >
-                  {tr("visas.apply")}
+                  <Icon.whatsapp className="h-4 w-4" /> {tr("visas.apply")}
                 </a>
               </div>
             </div>
@@ -676,7 +674,7 @@ export function Contact() {
                 </div>
               </div>
             ))}
-            <a href={wa("Bonjour AlKarama, je souhaite reserver.")} target="_blank" rel="noreferrer" className="btn-gold w-full">
+            <a href={wa("Bonjour AlKarama, je souhaite reserver.")} target="_blank" rel="noreferrer" className="btn-green w-full">
               <Icon.whatsapp className="h-5 w-5" /> {tr("contact.cta")}
             </a>
           </div>
@@ -736,7 +734,10 @@ export function Footer() {
         </div>
       </div>
       <div className="container-x mt-8 border-t border-white/10 pt-6 text-center text-xs">
-        © 2026 {business.name}. {tr("footer.rights")} · {tr("footer.built")}
+        © 2026 {business.name}. {tr("footer.rights")} ·{" "}
+        <a href="https://krateon.tn" target="_blank" rel="noreferrer" className="text-gold-light hover:underline">
+          {tr("footer.built")}
+        </a>
       </div>
     </footer>
   );

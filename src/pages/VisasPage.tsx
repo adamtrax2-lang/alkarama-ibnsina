@@ -49,12 +49,12 @@ export default function VisasPage() {
                 </ul>
 
                 <a
-                  href={wa(`Bonjour, je souhaite un visa (${v.name.fr}).`)}
+                  href={wa(`Bonjour, je souhaite plus d'informations sur le visa (${v.name.fr}).`)}
                   target="_blank"
                   rel="noreferrer"
-                  className="btn-gold mt-6 w-full sm:w-fit"
+                  className="btn-green mt-6 w-full sm:w-fit"
                 >
-                  {tr("visas.apply")}
+                  <Icon.whatsapp className="h-4 w-4" /> {tr("visas.apply")}
                 </a>
               </div>
             </div>
