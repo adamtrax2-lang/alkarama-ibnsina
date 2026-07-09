@@ -1,21 +1,23 @@
-import { useMemo, useState, type ReactNode } from "react";
+import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { Link } from "react-router-dom";
 import { useContent, type Content, type Business } from "../store";
+import { isSupabaseConfigured, supabase } from "../supabase";
 import type { UmrahPack, Hotel } from "../data";
 
 /*
-  Admin panel (demo grade).
+  Admin panel.
 
-  The login here is a simple front-end gate so the client can see the workflow.
-  It is NOT real security. Real login (one admin account, password reset, etc.)
-  arrives when we connect the database. Until then, anyone who knows the URL and
-  the password can edit, and edits live only in this browser.
+  Login is adaptive:
+    - CLOUD mode (Supabase keys set): real email + password login via Supabase Auth,
+      one admin account = the client. Secure, works across devices.
+    - LOCAL mode (no keys, offline demo): a simple front-end password gate. NOT real
+      security, edits live only in this browser. Used only before the DB is set up.
 
   UI language: French only (the client's language). The CONTENT it edits stays
   bilingual FR + EN, both fields are editable for every text the visitor sees.
 */
 
-const ADMIN_PASSWORD = "alkarama2026";
+const ADMIN_PASSWORD = "alkarama2026"; // local/offline demo only; ignored once Supabase is configured
 const AUTH_KEY = "alkarama_admin_authed";
 const clone = <T,>(x: T): T => JSON.parse(JSON.stringify(x));
 
@@ -347,30 +349,49 @@ function ContactEditor({ business, onChange }: { business: Business; onChange: (
 
 /* ----------------------------- Login gate ----------------------------- */
 function Login({ onOk }: { onOk: () => void }) {
+  const [email, setEmail] = useState("");
   const [pw, setPw] = useState("");
-  const [err, setErr] = useState(false);
+  const [err, setErr] = useState("");
+  const [busy, setBusy] = useState(false);
+
+  const submit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setErr("");
+    if (isSupabaseConfigured && supabase) {
+      setBusy(true);
+      const { error } = await supabase.auth.signInWithPassword({ email, password: pw });
+      setBusy(false);
+      if (error) {
+        setErr("Email ou mot de passe incorrect.");
+        return;
+      }
+      onOk();
+    } else {
+      if (pw === ADMIN_PASSWORD) {
+        sessionStorage.setItem(AUTH_KEY, "1");
+        onOk();
+      } else {
+        setErr("Mot de passe incorrect.");
+      }
+    }
+  };
+
   return (
     <div className="grid min-h-screen place-items-center bg-charcoal px-5">
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          if (pw === ADMIN_PASSWORD) {
-            sessionStorage.setItem(AUTH_KEY, "1");
-            onOk();
-          } else {
-            setErr(true);
-          }
-        }}
-        className="w-full max-w-sm rounded-3xl bg-white p-8 shadow-2xl"
-      >
+      <form onSubmit={submit} className="w-full max-w-sm rounded-3xl bg-white p-8 shadow-2xl">
         <p className="font-display text-2xl font-bold text-charcoal">Espace administration</p>
         <p className="mt-1 text-sm text-charcoal/60">AlKarama Ibn Sina Tourisme</p>
-        <div className="mt-6">
-          <TextInput label="Mot de passe" type="password" value={pw} onChange={(v) => { setPw(v); setErr(false); }} />
+        {isSupabaseConfigured && (
+          <div className="mt-6">
+            <TextInput label="Email" type="email" value={email} onChange={(v) => { setEmail(v); setErr(""); }} />
+          </div>
+        )}
+        <div className="mt-4">
+          <TextInput label="Mot de passe" type="password" value={pw} onChange={(v) => { setPw(v); setErr(""); }} />
         </div>
-        {err && <p className="mt-2 text-sm text-red-600">Mot de passe incorrect.</p>}
-        <button type="submit" className="btn-gold mt-6 w-full">
-          Se connecter
+        {err && <p className="mt-2 text-sm text-red-600">{err}</p>}
+        <button type="submit" disabled={busy} className="btn-gold mt-6 w-full disabled:opacity-50">
+          {busy ? "Connexion..." : "Se connecter"}
         </button>
         <Link to="/" className="mt-4 block text-center text-xs text-charcoal/50 hover:text-gold">
           Retour au site
@@ -382,25 +403,54 @@ function Login({ onOk }: { onOk: () => void }) {
 
 /* ----------------------------- Main panel ----------------------------- */
 export default function AdminPage() {
-  const { content, save, reset } = useContent();
-  const [authed, setAuthed] = useState(() => sessionStorage.getItem(AUTH_KEY) === "1");
-  const [draft, setDraft] = useState<Content>(() => clone(content));
+  const { content, save, reset, loading, source } = useContent();
+  const [authed, setAuthed] = useState(() =>
+    isSupabaseConfigured ? false : sessionStorage.getItem(AUTH_KEY) === "1",
+  );
+  const [checkingSession, setCheckingSession] = useState(isSupabaseConfigured);
+  const [draft, setDraft] = useState<Content | null>(null);
   const [tab, setTab] = useState<Tab>("omra");
   const [savedFlash, setSavedFlash] = useState(false);
+  const [saveErr, setSaveErr] = useState("");
 
-  const dirty = useMemo(() => JSON.stringify(draft) !== JSON.stringify(content), [draft, content]);
+  // Cloud mode: restore an existing login session on mount.
+  useEffect(() => {
+    if (!isSupabaseConfigured || !supabase) return;
+    supabase.auth.getSession().then(({ data }) => {
+      setAuthed(!!data.session);
+      setCheckingSession(false);
+    });
+  }, []);
 
+  // Seed the editable draft once content is ready (immediately in local mode,
+  // after the cloud fetch completes in cloud mode).
+  useEffect(() => {
+    if (!loading && draft === null) setDraft(clone(content));
+  }, [loading, content, draft]);
+
+  const dirty = useMemo(
+    () => draft !== null && JSON.stringify(draft) !== JSON.stringify(content),
+    [draft, content],
+  );
+
+  if (checkingSession) return <FullScreenMsg text="Chargement..." />;
   if (!authed) return <Login onOk={() => setAuthed(true)} />;
+  if (draft === null) return <FullScreenMsg text="Chargement du contenu..." />;
 
-  const doSave = () => {
-    save(draft);
-    setSavedFlash(true);
-    setTimeout(() => setSavedFlash(false), 2500);
+  const doSave = async () => {
+    setSaveErr("");
+    const res = await save(draft);
+    if (res.ok) {
+      setSavedFlash(true);
+      setTimeout(() => setSavedFlash(false), 2500);
+    } else {
+      setSaveErr(res.error || "Erreur lors de l'enregistrement.");
+    }
   };
 
-  const doReset = () => {
+  const doReset = async () => {
     if (!confirm("Reinitialiser tout le contenu aux valeurs d'origine ? Vos modifications seront perdues.")) return;
-    reset();
+    await reset();
     // reload so the panel re-seeds its draft from the freshly restored defaults
     setTimeout(() => window.location.reload(), 50);
   };
@@ -424,7 +474,16 @@ export default function AdminPage() {
             <p className="font-display text-lg font-bold leading-tight text-charcoal">Administration</p>
             <p className="text-xs text-charcoal/50">AlKarama Ibn Sina Tourisme</p>
           </div>
+          <span
+            className={`hidden rounded-full px-2.5 py-1 text-[10px] font-bold uppercase sm:inline ${
+              source === "cloud" ? "bg-emerald-100 text-emerald-700" : "bg-amber-100 text-amber-700"
+            }`}
+            title={source === "cloud" ? "Connecte a la base de donnees" : "Mode local (navigateur uniquement)"}
+          >
+            {source === "cloud" ? "Cloud" : "Local"}
+          </span>
           <div className="ml-auto flex items-center gap-2">
+            {saveErr && <span className="text-xs font-semibold text-red-600">{saveErr}</span>}
             {dirty && <span className="text-xs font-semibold text-amber-600">Modifications non enregistrees</span>}
             {savedFlash && <span className="text-xs font-semibold text-emerald-600">Enregistre</span>}
             <a href="/" target="_blank" rel="noreferrer" className="btn-outline !px-4 !py-2 !text-xs">
@@ -532,8 +591,9 @@ export default function AdminPage() {
             Reinitialiser tout
           </button>
           <button
-            onClick={() => {
-              sessionStorage.removeItem(AUTH_KEY);
+            onClick={async () => {
+              if (isSupabaseConfigured && supabase) await supabase.auth.signOut();
+              else sessionStorage.removeItem(AUTH_KEY);
               setAuthed(false);
             }}
             className="ml-auto text-sm font-semibold text-charcoal/50 hover:text-charcoal"
@@ -542,6 +602,14 @@ export default function AdminPage() {
           </button>
         </div>
       </main>
+    </div>
+  );
+}
+
+function FullScreenMsg({ text }: { text: string }) {
+  return (
+    <div className="grid min-h-screen place-items-center bg-cream">
+      <p className="text-sm font-medium text-charcoal/60">{text}</p>
     </div>
   );
 }
