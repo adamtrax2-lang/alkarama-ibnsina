@@ -5,7 +5,6 @@ import {
   visaCats,
   visaIncludes,
   billetsCards,
-  whyUs,
   reviews,
   wa,
   business,
@@ -15,12 +14,14 @@ import {
   type UmrahPack,
   type Hotel,
 } from "../data";
-import { Icon, type IconName } from "./Icons";
+import { Icon } from "./Icons";
 
 function SectionHead({ kicker, title, sub }: { kicker: string; title: string; sub?: string }) {
   return (
     <div className="mx-auto mb-8 max-w-2xl text-center">
-      <p className="eyebrow">{kicker}</p>
+      <span className="inline-flex items-center rounded-full bg-gold px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.2em] text-charcoal">
+        {kicker}
+      </span>
       <h2 className="section-title mt-3">{title}</h2>
       {sub && <p className="mt-4 text-charcoal/60">{sub}</p>}
     </div>
@@ -65,40 +66,50 @@ export function OmraPackCard({ p }: { p: UmrahPack }) {
     <div
       className={`relative flex flex-col overflow-hidden rounded-3xl transition ${
         hi
-          ? "bg-gradient-to-b from-gold-light to-gold text-charcoal shadow-2xl shadow-gold/30 md:-mt-4 md:mb-4 ring-2 ring-gold-light"
+          ? "bg-gradient-to-b from-gold-light to-gold text-charcoal shadow-2xl shadow-gold/30 ring-2 ring-gold-light"
           : "bg-white/[0.04] text-white ring-1 ring-white/10"
       }`}
     >
       {p.img && (
-        <div className="relative h-32 w-full shrink-0">
+        <div className="relative h-56 w-full shrink-0">
           <img src={p.img} alt={p.name[lang]} className="h-full w-full object-cover" />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+          {hi && (
+            <span className="absolute right-5 top-5 rounded-full bg-charcoal px-3 py-1 text-[10px] font-bold uppercase tracking-wide text-gold-light">
+              {tr("omra.popular")}
+            </span>
+          )}
+          <div className="absolute inset-x-0 bottom-0 p-5 text-white">
+            <span className="inline-flex w-fit items-center gap-1.5 rounded-full bg-white/15 px-3 py-1 text-[11px] font-semibold backdrop-blur-sm">
+              <Icon.calendar className="h-3.5 w-3.5" /> {p.dateLabel[lang]}
+            </span>
+            {p.otherDates && <p className="mt-1.5 text-[11px] text-white/70">{p.otherDates[lang]}</p>}
+            <div className="mt-2 flex items-center justify-between">
+              <h3 className="font-display text-3xl font-bold">{p.name[lang]}</h3>
+              <Stars n={p.stars} />
+            </div>
+          </div>
         </div>
       )}
-      {hi && (
-        <span className="absolute right-5 top-5 rounded-full bg-charcoal px-3 py-1 text-[10px] font-bold uppercase tracking-wide text-gold-light">
-          {tr("omra.popular")}
-        </span>
+      {!p.img && (
+        <div className="p-7 pb-0">
+          <span
+            className={`inline-flex w-fit items-center gap-1.5 rounded-full px-3 py-1 text-[11px] font-semibold ${
+              hi ? "bg-charcoal/10 text-charcoal" : "bg-gold/15 text-gold-light"
+            }`}
+          >
+            <Icon.calendar className="h-3.5 w-3.5" /> {p.dateLabel[lang]}
+          </span>
+          {p.otherDates && (
+            <p className={`mt-1.5 text-[11px] ${hi ? "text-charcoal/55" : "text-white/40"}`}>{p.otherDates[lang]}</p>
+          )}
+          <div className="mt-3 flex items-center justify-between">
+            <h3 className="font-display text-3xl font-bold">{p.name[lang]}</h3>
+            <Stars n={p.stars} className={hi ? "[&_svg]:text-charcoal" : ""} />
+          </div>
+        </div>
       )}
       <div className="flex flex-1 flex-col p-7">
-        {/* date badge */}
-        <span
-          className={`inline-flex w-fit items-center gap-1.5 rounded-full px-3 py-1 text-[11px] font-semibold ${
-            hi ? "bg-charcoal/10 text-charcoal" : "bg-gold/15 text-gold-light"
-          }`}
-        >
-          <Icon.calendar className="h-3.5 w-3.5" /> {p.dateLabel[lang]}
-        </span>
-        {p.otherDates && (
-          <p className={`mt-1.5 text-[11px] ${hi ? "text-charcoal/55" : "text-white/40"}`}>{p.otherDates[lang]}</p>
-        )}
-
-        {/* name */}
-        <div className="mt-3 flex items-center justify-between">
-          <h3 className="font-display text-3xl font-bold">{p.name[lang]}</h3>
-          <Stars n={p.stars} className={hi ? "[&_svg]:text-charcoal" : ""} />
-        </div>
-
         {/* services */}
         <ul className={`mt-5 space-y-2.5 text-sm ${hi ? "text-charcoal/85" : "text-white/75"}`}>
           {p.services.map((s) => (
@@ -117,20 +128,22 @@ export function OmraPackCard({ p }: { p: UmrahPack }) {
         {/* occupancy prices, or a "price on request" note when no prices are set yet */}
         {p.prices.length > 0 ? (
           <>
-            <p className={`mt-6 text-center text-xs font-bold uppercase tracking-wide ${hi ? "text-charcoal" : "text-gold-light"}`}>
-              {tr("omra.priceLabel")}
-            </p>
-            <div className={`mt-2 grid grid-cols-3 gap-2 rounded-2xl p-3 text-center ${hi ? "bg-charcoal/10" : "bg-white/5"}`}>
+            <div className={`mt-6 grid grid-cols-3 gap-2 rounded-2xl p-3 text-center ${hi ? "bg-charcoal/10" : "bg-white/5"}`}>
               {p.prices.map((pr) => (
                 <div key={pr.people}>
-                  <p className={`text-[10px] font-medium ${hi ? "text-charcoal/60" : "text-white/45"}`}>
-                    {pr.people} {tr("omra.people")}
-                  </p>
-                  <p className="mt-1 font-display text-xl font-bold leading-none">{pr.val}</p>
+                  <span className={`flex justify-center ${hi ? "[&_svg]:text-charcoal/60" : "[&_svg]:text-white/45"}`}>
+                    {Array.from({ length: pr.people }).map((_, idx) => (
+                      <Icon.person key={idx} className="-ml-1 h-3.5 w-3.5 first:ml-0" />
+                    ))}
+                  </span>
+                  <p className="mt-1.5 font-sans text-xl font-extrabold leading-none">{pr.val}</p>
                   <p className={`text-[10px] ${hi ? "text-charcoal/60" : "text-white/45"}`}>DT</p>
                 </div>
               ))}
             </div>
+            <p className={`mt-2 text-center text-[11px] ${hi ? "text-charcoal/55" : "text-white/40"}`}>
+              {tr("omra.priceLabel")}
+            </p>
           </>
         ) : (
           p.priceNote && (
@@ -144,7 +157,7 @@ export function OmraPackCard({ p }: { p: UmrahPack }) {
           href={wa(`Bonjour, je suis interesse par la formule Omra ${p.name.fr}.`)}
           target="_blank"
           rel="noreferrer"
-          className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-full bg-emerald-600 py-3 text-sm font-semibold text-white shadow-lg shadow-emerald-600/20 transition hover:bg-emerald-700"
+          className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-full bg-emerald-600 py-3 text-sm font-semibold text-white shadow-lg shadow-emerald-600/20 transition hover:bg-emerald-700 md:mt-auto"
         >
           <Icon.whatsapp className="h-4 w-4" /> {tr("hero.book")}
         </a>
@@ -161,7 +174,9 @@ export function Omra() {
     <section id="omra" className="relative overflow-hidden bg-charcoal py-20 text-white">
       <div className="container-x">
         <div className="mx-auto mb-12 max-w-2xl text-center">
-          <p className="eyebrow text-gold-light">{tr("omra.kicker")}</p>
+          <span className="inline-flex items-center rounded-full bg-gold px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.2em] text-charcoal">
+            {tr("omra.kicker")}
+          </span>
           <h2 className="section-title mt-3 text-white">{tr("omra.title")}</h2>
           <p className="mt-4 text-white/70">{tr("omra.sub")}</p>
           <span className="mx-auto mt-5 block h-0.5 w-20 rounded bg-gold" />
@@ -330,18 +345,35 @@ export function Billets() {
 export function DestinationCard({ d }: { d: Destination }) {
   const { tr, lang } = useLang();
   return (
-    <div className="group relative h-72 overflow-hidden rounded-3xl shadow-lg">
+    <div
+      className={`group relative h-72 overflow-hidden rounded-3xl transition ${
+        d.promo
+          ? "shadow-2xl shadow-gold/50 ring-4 ring-gold md:-mt-3 md:mb-3 md:scale-[1.04]"
+          : "shadow-lg"
+      }`}
+    >
       <img
         src={d.img}
         alt={d.title[lang]}
         className="h-full w-full object-cover transition duration-700 group-hover:scale-110"
       />
       <div className="absolute inset-0 bg-gradient-to-t from-charcoal/90 via-charcoal/35 to-transparent" />
+      {d.promo && (
+        <span className="absolute right-4 top-4 flex animate-pulse items-center gap-1 rounded-full bg-red-500 px-3 py-1 text-[11px] font-bold uppercase tracking-wide text-white shadow-lg">
+          <Icon.star className="h-3 w-3" /> {tr("common.promo")}
+        </span>
+      )}
       <div className="absolute inset-x-0 bottom-0 p-6 text-white">
         <h3 className="font-display text-2xl font-semibold">{d.title[lang]}</h3>
         <p className="mt-1 text-sm text-white/80">{d.desc[lang]}</p>
+        {d.priceFrom && (
+          <p className="mt-2 text-sm">
+            <span className="text-xs text-white/60">{tr("common.from")} </span>
+            <span className="font-display text-lg font-bold text-gold-light">{d.priceFrom}</span>
+          </p>
+        )}
         <a href={wa(d.waMsg)} target="_blank" rel="noreferrer" className="btn-green mt-4">
-          <Icon.whatsapp className="h-4 w-4" /> {tr("common.bookNow")}
+          <Icon.whatsapp className="h-4 w-4" /> {tr("common.moreInfo")}
         </a>
       </div>
     </div>
@@ -544,7 +576,9 @@ export function Video() {
     <section id="video" className="bg-white py-20">
       <div className="container-x">
         <div className="mx-auto mb-10 max-w-2xl text-center">
-          <p className="eyebrow text-gold">{tr("video.kicker")}</p>
+          <span className="inline-flex items-center rounded-full bg-gold px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.2em] text-charcoal">
+            {tr("video.kicker")}
+          </span>
           <h2 className="section-title mt-3">{tr("video.title")}</h2>
           <p className="mt-4 text-charcoal/60">{tr("video.sub")}</p>
           <span className="mx-auto mt-5 block h-0.5 w-20 rounded bg-gold" />
@@ -575,26 +609,21 @@ export function Video() {
   );
 }
 
-/* ---------------- Why us ---------------- */
+/* ---------------- Why us (client asked to keep only the slogan, drop the feature tiles) ---------------- */
 export function WhyUs() {
-  const { tr, lang } = useLang();
+  const { tr } = useLang();
   return (
-    <section className="bg-sand py-20">
-      <div className="container-x">
-        <SectionHead kicker={tr("why.kicker")} title={tr("why.title")} />
-        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {whyUs.map((w) => {
-            const I = Icon[w.icon as IconName];
-            return (
-              <div key={w.title.fr} className="flex items-center gap-4 rounded-2xl bg-white p-5 shadow-sm">
-                <span className="grid h-12 w-12 shrink-0 place-items-center rounded-xl bg-sand text-gold">
-                  <I className="h-6 w-6" />
-                </span>
-                <p className="font-medium text-charcoal">{w.title[lang]}</p>
-              </div>
-            );
-          })}
-        </div>
+    <section className="relative overflow-hidden bg-charcoal py-28 text-center">
+      <img src="/brand/banner.png" alt="" className="absolute inset-0 h-full w-full object-cover opacity-40" />
+      <div className="absolute inset-0 bg-gradient-to-b from-charcoal/80 via-charcoal/70 to-charcoal/90" />
+      <div className="container-x relative">
+        <span className="mx-auto inline-flex w-fit items-center rounded-full bg-gold px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.2em] text-charcoal">
+          {tr("why.kicker")}
+        </span>
+        <h2 className="mx-auto mt-6 max-w-2xl font-display text-3xl font-bold text-white sm:text-4xl lg:text-5xl">
+          {tr("why.title")}
+        </h2>
+        <span className="mx-auto mt-6 block h-0.5 w-20 rounded bg-gold" />
       </div>
     </section>
   );
@@ -653,9 +682,9 @@ export function Contact() {
   const { content } = useContent();
   const business = content.business;
   const items = [
-    { icon: Icon.pin, label: tr("contact.address"), value: business.address },
-    { icon: Icon.phone, label: tr("contact.phone"), value: `${business.phone} · ${business.phone2}` },
-    { icon: Icon.clock, label: tr("contact.hours"), value: tr("contact.hoursval") },
+    { icon: Icon.pin, label: tr("contact.address"), value: business.address, cls: "bg-red-500/10 text-red-500" },
+    { icon: Icon.phone, label: tr("contact.phone"), value: `${business.phone} · ${business.phone2}`, cls: "bg-emerald-500/10 text-emerald-600" },
+    { icon: Icon.clock, label: tr("contact.hours"), value: tr("contact.hoursval"), cls: "bg-blue-500/10 text-blue-600" },
   ];
   return (
     <section id="contact" className="bg-sand py-20">
@@ -665,7 +694,7 @@ export function Contact() {
           <div className="space-y-5">
             {items.map((it) => (
               <div key={it.label} className="flex items-start gap-4 rounded-2xl bg-white p-5 shadow-sm">
-                <span className="grid h-12 w-12 shrink-0 place-items-center rounded-xl bg-sand text-gold">
+                <span className={`grid h-12 w-12 shrink-0 place-items-center rounded-xl ${it.cls}`}>
                   <it.icon className="h-6 w-6" />
                 </span>
                 <div>
@@ -701,35 +730,35 @@ export function Footer() {
     <footer className="bg-charcoal py-10 text-white/70">
       <div className="container-x flex flex-col items-center justify-between gap-6 sm:flex-row">
         <div className="flex items-center gap-3">
-          <img src="/brand/logo-white.png" alt={business.name} className="h-14 w-auto" />
+          <img src="/brand/logo-white.png" alt={business.name} className="h-16 w-auto" />
           <div>
             <p className="text-xs">{business.address}</p>
           </div>
         </div>
         <div className="flex items-center gap-3">
-          <a href={business.facebook} target="_blank" rel="noreferrer" className="grid h-10 w-10 place-items-center rounded-full bg-[#1877F2] text-white transition hover:opacity-90">
-            <Icon.facebook className="h-5 w-5" />
+          <a href={business.facebook} target="_blank" rel="noreferrer" className="grid h-10 w-10 place-items-center rounded-xl bg-[#1877F2] text-white transition hover:opacity-90">
+            <Icon.facebook className="h-7 w-7" />
           </a>
-          <a href={business.instagram} target="_blank" rel="noreferrer" className="instagram-grad grid h-10 w-10 place-items-center rounded-full text-white transition hover:opacity-90">
-            <Icon.instagram className="h-5 w-5" />
+          <a href={business.instagram} target="_blank" rel="noreferrer" className="instagram-grad grid h-10 w-10 place-items-center rounded-xl text-white transition hover:opacity-90">
+            <Icon.instagram className="h-7 w-7" />
           </a>
           {business.tiktok && (
-            <a href={business.tiktok} target="_blank" rel="noreferrer" aria-label="TikTok" className="grid h-10 w-10 place-items-center rounded-full bg-black text-white transition hover:opacity-90">
-              <Icon.tiktok className="h-5 w-5" />
+            <a href={business.tiktok} target="_blank" rel="noreferrer" aria-label="TikTok" className="grid h-10 w-10 place-items-center rounded-xl bg-black text-white transition hover:opacity-90">
+              <Icon.tiktok className="h-7 w-7" />
             </a>
           )}
           {business.youtube && (
-            <a href={business.youtube} target="_blank" rel="noreferrer" aria-label="YouTube" className="grid h-10 w-10 place-items-center rounded-full bg-[#FF0000] text-white transition hover:opacity-90">
-              <Icon.youtube className="h-5 w-5" />
+            <a href={business.youtube} target="_blank" rel="noreferrer" aria-label="YouTube" className="grid h-10 w-10 place-items-center rounded-xl bg-[#FF0000] text-white transition hover:opacity-90">
+              <Icon.youtube className="h-7 w-7" />
             </a>
           )}
           {business.x && (
-            <a href={business.x} target="_blank" rel="noreferrer" aria-label="X" className="grid h-10 w-10 place-items-center rounded-full bg-black text-white transition hover:opacity-90">
-              <Icon.x className="h-5 w-5" />
+            <a href={business.x} target="_blank" rel="noreferrer" aria-label="X" className="grid h-10 w-10 place-items-center rounded-xl bg-black text-white transition hover:opacity-90">
+              <Icon.x className="h-7 w-7" />
             </a>
           )}
-          <a href={wa("Bonjour AlKarama.")} target="_blank" rel="noreferrer" className="grid h-10 w-10 place-items-center rounded-full bg-[#25D366] text-white transition hover:opacity-90">
-            <Icon.whatsapp className="h-5 w-5" />
+          <a href={wa("Bonjour AlKarama.")} target="_blank" rel="noreferrer" className="grid h-10 w-10 place-items-center rounded-xl bg-[#25D366] text-white transition hover:opacity-90">
+            <Icon.whatsapp className="h-7 w-7" />
           </a>
         </div>
       </div>

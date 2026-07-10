@@ -39,7 +39,7 @@ export default function Hero() {
         <div className="grid w-full items-center gap-6 lg:grid-cols-12 lg:gap-10">
           {/* Left: service + headline + one line */}
           <div key={`txt-${i}`} className="animate-fadeup lg:col-span-7">
-            <span className="inline-flex items-center gap-2 rounded-full bg-gold/90 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.2em] text-white">
+            <span className="inline-flex items-center gap-2 rounded-full bg-gold/90 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.2em] text-charcoal">
               {slide.service[lang]}
             </span>
             <h1 className="mt-5 max-w-2xl font-display text-4xl font-bold leading-[1.1] text-white [text-shadow:0_2px_16px_rgba(0,0,0,0.65)] sm:text-5xl lg:text-[3.4rem]">
@@ -55,7 +55,8 @@ export default function Hero() {
               className="mx-auto max-w-sm animate-slidein overflow-hidden rounded-3xl border border-white/15 bg-white/10 backdrop-blur-md sm:max-w-md lg:ml-auto lg:mr-0"
             >
               <div className="relative">
-                <img src={slide.cardImg ?? slide.img} alt="" className="h-36 w-full object-cover sm:h-48" />
+                <img src={slide.cardImg ?? slide.img} alt="" className="h-64 w-full object-cover sm:h-80" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent" />
                 <span
                   className={`absolute left-3 top-3 rounded-full px-3 py-1 text-[11px] font-bold uppercase tracking-wide text-white shadow ${
                     slide.card.urgent ? "bg-red-500" : "bg-gold"
@@ -63,27 +64,27 @@ export default function Hero() {
                 >
                   {slide.card.badge[lang]}
                 </span>
-              </div>
-              <div className="p-5 text-white sm:p-6">
-                <h3 className="font-display text-lg font-semibold sm:text-xl">{slide.card.title[lang]}</h3>
-                <p className="mt-1.5 text-sm text-white/80">{slide.card.sub[lang]}</p>
-                <div className={`mt-4 flex items-center border-t border-white/15 pt-4 ${slide.card.price ? "justify-between" : "justify-end"}`}>
-                  {slide.card.price && (
-                    <div>
-                      <p className="text-[11px] uppercase tracking-wide text-white/60">{tr("common.from")}</p>
-                      <p className="text-lg font-bold text-gold-light">{slide.card.price}</p>
-                    </div>
-                  )}
-                  {slide.card.formLink ? (
-                    <Link to={slide.card.formLink} className="btn-green !px-5 !py-2.5">
-                      <Icon.arrow className="h-4 w-4" /> {tr("hero.book")}
-                    </Link>
-                  ) : (
-                    <a href={wa(slide.card.waMsg)} target="_blank" rel="noreferrer" className="btn-green !px-5 !py-2.5">
-                      <Icon.whatsapp className="h-4 w-4" /> {tr("hero.book")}
-                    </a>
-                  )}
+                <div className="absolute inset-x-0 bottom-0 p-5 text-white sm:p-6">
+                  <h3 className="font-display text-lg font-semibold sm:text-xl">{slide.card.title[lang]}</h3>
+                  <p className="mt-1.5 text-sm text-white/80">{slide.card.sub[lang]}</p>
                 </div>
+              </div>
+              <div className={`flex items-center p-3 ${slide.card.price ? "justify-between" : "justify-end"}`}>
+                {slide.card.price && (
+                  <div className="pl-2">
+                    <p className="text-[11px] uppercase tracking-wide text-white/60">{tr("common.from")}</p>
+                    <p className="text-lg font-bold text-gold-light">{slide.card.price}</p>
+                  </div>
+                )}
+                {slide.card.formLink ? (
+                  <Link to={slide.card.formLink} className="btn-green !px-5 !py-2.5">
+                    <Icon.arrow className="h-4 w-4" /> {tr("hero.book")}
+                  </Link>
+                ) : (
+                  <a href={wa(slide.card.waMsg)} target="_blank" rel="noreferrer" className="btn-green !px-5 !py-2.5">
+                    <Icon.whatsapp className="h-4 w-4" /> {tr("hero.book")}
+                  </a>
+                )}
               </div>
             </div>
             <div className="mt-5 flex justify-center gap-2 lg:justify-end lg:pr-2">

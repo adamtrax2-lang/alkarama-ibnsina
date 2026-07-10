@@ -139,6 +139,12 @@ export const Icon = {
       <path d="M5 12l4 4 10-10" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   ),
+  person: (p: P) => (
+    <svg viewBox="0 0 24 24" fill="currentColor" className={p.className}>
+      <circle cx="12" cy="7.5" r="4" />
+      <path d="M4 20c0-4.4 3.6-7 8-7s8 2.6 8 7v.5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V20z" />
+    </svg>
+  ),
 };
 
 export type IconName = keyof typeof Icon;

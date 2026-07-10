@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useLang } from "../i18n";
 import { business, wa } from "../data";
+import { Icon } from "./Icons";
 
 const links = [
   { key: "nav.home", href: "/" },
@@ -32,7 +33,7 @@ export default function Navbar() {
       <nav className="container-x flex h-20 items-center justify-between">
         {/* Brand logo (transparent PNG, white-text variant reads on the dark hero) */}
         <Link to="/" className="flex items-center" aria-label={business.name}>
-          <img src="/brand/logo-white.png" alt={business.name} className="h-12 w-auto sm:h-14" />
+          <img src="/brand/logo-white.png" alt={business.name} className="h-14 w-auto sm:h-16" />
         </Link>
 
         <div className="hidden items-center gap-7 lg:flex">
@@ -40,7 +41,7 @@ export default function Navbar() {
             <Link
               key={l.key}
               to={l.href}
-              className="text-sm font-medium text-white/90 drop-shadow transition hover:text-gold"
+              className="text-sm font-medium text-white drop-shadow transition hover:text-gold"
             >
               {tr(l.key)}
             </Link>
@@ -67,7 +68,7 @@ export default function Navbar() {
             rel="noreferrer"
             className="btn-green hidden sm:inline-flex"
           >
-            {tr("nav.cta")}
+            <Icon.phone className="h-4 w-4" /> {business.phone}
           </a>
           <button
             onClick={() => setOpen((o) => !o)}

@@ -20,9 +20,9 @@ export default function SocialRail() {
           target="_blank"
           rel="noreferrer"
           aria-label={it.label}
-          className={`grid h-11 w-11 place-items-center rounded-full shadow-lg transition hover:scale-110 ${it.cls}`}
+          className={`grid h-11 w-11 place-items-center rounded-xl shadow-lg transition hover:scale-110 ${it.cls}`}
         >
-          <it.icon className="h-5 w-5" />
+          <it.icon className="h-7 w-7" />
         </a>
       ))}
     </div>

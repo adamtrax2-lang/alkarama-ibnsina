@@ -16,6 +16,9 @@ function buildMailto(data: FormData, lang: "fr" | "en") {
     `${lang === "fr" ? "Date de depart" : "Departure date"}: ${get("departDate")}`,
     `${lang === "fr" ? "Date de retour" : "Return date"}: ${get("returnDate")}`,
     `${lang === "fr" ? "Personnes" : "People"}: ${get("people")}`,
+    `${lang === "fr" ? "Bagages" : "Luggage"}: ${
+      get("baggage") === "oui" ? (lang === "fr" ? "Avec bagages" : "With luggage") : (lang === "fr" ? "Sans bagages" : "Without luggage")
+    }`,
     `${lang === "fr" ? "Remarques" : "Notes"}: ${get("message")}`,
   ].join("\n");
   return `mailto:${bookingEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
@@ -117,6 +120,21 @@ export default function BookingFormPage() {
               <div>
                 <label className="mb-1.5 block text-sm font-semibold text-charcoal">{tr("booking.people")}</label>
                 <input name="people" type="number" min={1} defaultValue={1} required className="w-full rounded-xl border border-charcoal/15 px-4 py-2.5 text-sm outline-none focus:border-gold" />
+              </div>
+
+              <div>
+                <label className="mb-2 block text-sm font-semibold text-charcoal">{tr("booking.baggage")}</label>
+                <div className="flex gap-3">
+                  {(["oui", "non"] as const).map((v) => (
+                    <label
+                      key={v}
+                      className="flex flex-1 cursor-pointer items-center justify-center gap-2 rounded-xl border border-charcoal/15 px-4 py-3 text-sm font-medium text-charcoal transition has-[:checked]:border-gold has-[:checked]:bg-gold/10"
+                    >
+                      <input type="radio" name="baggage" value={v} defaultChecked={v === "non"} className="accent-gold" />
+                      {v === "oui" ? tr("booking.baggageYes") : tr("booking.baggageNo")}
+                    </label>
+                  ))}
+                </div>
               </div>
 
               <div>

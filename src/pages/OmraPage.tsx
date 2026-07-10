@@ -88,9 +88,9 @@ function MonthCalendar({
               onClick={() => onSelect(iso)}
               className={`aspect-square rounded-lg text-xs font-medium transition ${
                 isSelected
-                  ? "bg-gold text-white shadow-md"
+                  ? "bg-emerald-500 text-white shadow-md"
                   : has
-                  ? "bg-gold/15 text-charcoal hover:bg-gold/30"
+                  ? "bg-emerald-100 text-charcoal hover:bg-emerald-200"
                   : "text-charcoal/25"
               }`}
             >
@@ -172,7 +172,7 @@ export default function OmraPage() {
             )}
           </div>
           <p className="mt-4 flex items-center justify-center gap-2 text-xs text-charcoal/50">
-            <span className="inline-block h-3 w-3 rounded bg-gold/15 ring-1 ring-gold/30" /> {tr("omraPage.legendAvailable")}
+            <span className="inline-block h-3 w-3 rounded bg-emerald-100 ring-1 ring-emerald-300" /> {tr("omraPage.legendAvailable")}
           </p>
         </div>
       </section>

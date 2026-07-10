@@ -125,27 +125,41 @@ export const heroSlides: HeroSlide[] = [
 /* ---------- Partners ---------- */
 export const morchidoun = { name: "Al Morchidoun", img: "/partners/morchidoun.jpeg" };
 
-// Partner logos overlaid on the hero photo (EliteMasar style), white/transparent except
-// Al Morchidoun which stays in color per client request. Single partners display on the
-// site now (client asked to drop the separate color "Nos Partenaires" section, keep only this row).
-// order deliberately mixed so it does not read as a copy of the reference site
+// Partner logos overlaid on the hero photo (EliteMasar style), in their official brand colors
+// per client request. order deliberately mixed so it does not read as a copy of the reference site.
+// Backgrounds were baked-in solid white/black on several source files - cleaned to transparent via
+// flood fill (kept internal design details like the IATA globe's white gridlines intact).
+// Ooredoo and Star Assurances had no color source at all (only white silhouettes) - recolored to
+// their well-known official brand colors (Ooredoo red, Star Assurances green); worth a quick
+// eyeball-check against the client's own logo files if he ever sends the originals.
 export const heroPartners: { name: string; img?: string; text?: string; color?: boolean }[] = [
-  { name: "Saudi Tourism Authority", img: "/partners/saudi.png" },
+  { name: "Saudi Tourism Authority", img: "/partners/saudi-color.png", color: true },
   { name: "Amadeus", text: "amadeus" },
   { name: "Al Morchidoun", img: "/partners/morchidoun-color.png", color: true },
-  { name: "Inspiring Tunisia", img: "/partners/tunisia.png" },
-  { name: "IATA", img: "/partners/iata.png" },
-  { name: "Go Turkiye", img: "/partners/turkiye.png" },
-  { name: "Star Assurances", img: "/partners/star-assurances.png" },
-  { name: "Tunisie Telecom", img: "/partners/tunisie-telecom-white.png" },
-  { name: "Ooredoo", img: "/partners/ooredoo.png" },
+  { name: "Inspiring Tunisia", img: "/partners/tunisia-color.png", color: true },
+  { name: "IATA", img: "/partners/iata-color.png", color: true },
+  { name: "Go Turkiye", img: "/partners/turkiye-color.png", color: true },
+  { name: "Star Assurances", img: "/partners/star-assurances.png", color: true },
+  { name: "Tunisie Telecom", img: "/partners/tunisie-telecom.png", color: true },
+  { name: "Ooredoo", img: "/partners/ooredoo.png", color: true },
 ];
 
 /* ---------- Destinations (image cards, EliteMasar "Destinations Packs" style) ---------- */
-// International destinations the agency organizes trips to. No prices shown per Adam's steer
-// (client didn't want to commit to numbers here) - just photo + "Reserver" / "Appelez-nous" -> WhatsApp.
+// International destinations the agency organizes trips to.
+// PLACEHOLDER price: Adam asked for "starts from 1950" as the example figure to put on all 3
+// featured cards - it is his own placeholder number, not invented by us, but it should still be
+// confirmed/replaced with real per-destination pricing before launch.
 // 3 featured on the homepage; the rest (currently just Maldives) appear via "Decouvrir tout" on /packs.
-export type Destination = { id: string; img: string; title: L; desc: L; waMsg: string; featured?: boolean };
+export type Destination = {
+  id: string;
+  img: string;
+  title: L;
+  desc: L;
+  waMsg: string;
+  featured?: boolean;
+  priceFrom?: string; // placeholder, see note above
+  promo?: boolean; // eye-catching "promo" ribbon
+};
 
 export const destinations: Destination[] = [
   {
@@ -155,6 +169,7 @@ export const destinations: Destination[] = [
     desc: { fr: "Pyramides de Gizeh, Nil et tresors pharaoniques.", en: "Pyramids of Giza, the Nile and pharaonic treasures." },
     waMsg: "Bonjour, je suis interesse par un voyage au Caire.",
     featured: true,
+    priceFrom: "1 950 DT",
   },
   {
     id: "istanbul",
@@ -163,6 +178,8 @@ export const destinations: Destination[] = [
     desc: { fr: "Entre Europe et Asie, mosquees et bazars historiques.", en: "Between Europe and Asia, historic mosques and bazaars." },
     waMsg: "Bonjour, je suis interesse par un voyage a Istanbul.",
     featured: true,
+    priceFrom: "1 950 DT",
+    promo: true,
   },
   {
     id: "bali",
@@ -171,6 +188,7 @@ export const destinations: Destination[] = [
     desc: { fr: "Rizieres, temples et plages paradisiaques.", en: "Rice terraces, temples and paradise beaches." },
     waMsg: "Bonjour, je suis interesse par un voyage a Bali.",
     featured: true,
+    priceFrom: "1 950 DT",
   },
   {
     id: "maldives",

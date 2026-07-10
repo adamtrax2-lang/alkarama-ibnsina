@@ -35,7 +35,7 @@ export const t: Dict = {
   "omra.triple": { fr: "Triple", en: "Triple" },
   "omra.double": { fr: "Double", en: "Double" },
   "omra.perPerson": { fr: "/ personne", en: "/ person" },
-  "omra.popular": { fr: "Le + choisi", en: "Most chosen" },
+  "omra.popular": { fr: "Le plus populaire", en: "Most popular" },
   "omra.people": { fr: "pers.", en: "pers." },
   "omra.priceLabel": { fr: "Prix / personne selon la chambre", en: "Price / person by room" },
 
@@ -127,6 +127,8 @@ export const t: Dict = {
   "common.googleReviews": { fr: "avis Google", en: "Google reviews" },
   "common.from": { fr: "A partir de", en: "From" },
   "common.backHome": { fr: "Retour a l'accueil", en: "Back to home" },
+  "common.promo": { fr: "Promo", en: "Promo" },
+  "common.moreInfo": { fr: "Plus d'infos", en: "Get more info" },
 
   "omraPage.title": { fr: "Toutes nos formules Omra saison 2026-2027", en: "All our Umrah packages, 2026-2027 season" },
   "omraPage.sub": {
@@ -192,6 +194,9 @@ export const t: Dict = {
   "booking.departDate": { fr: "Date de depart", en: "Departure date" },
   "booking.returnDate": { fr: "Date de retour (optionnel)", en: "Return date (optional)" },
   "booking.people": { fr: "Nombre de personnes", en: "Number of people" },
+  "booking.baggage": { fr: "Bagages", en: "Luggage" },
+  "booking.baggageYes": { fr: "Avec bagages", en: "With luggage" },
+  "booking.baggageNo": { fr: "Sans bagages", en: "Without luggage" },
   "booking.message": { fr: "Remarques (optionnel)", en: "Notes (optional)" },
   "booking.submit": { fr: "Envoyer la demande", en: "Send request" },
   "booking.sentTitle": { fr: "Presque termine", en: "Almost done" },
