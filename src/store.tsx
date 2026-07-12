@@ -4,8 +4,17 @@ import {
   umrahMoreDepartures as defaultUmrahMore,
   hotels as defaultHotels,
   business as defaultBusiness,
+  heroSlides as defaultHeroSlides,
+  heroPartners as defaultHeroPartners,
+  destinations as defaultDestinations,
+  includedServices as defaultIncludedServices,
+  visaCats as defaultVisaCats,
+  visaIncludes as defaultVisaIncludes,
   type UmrahPack,
   type Hotel,
+  type HeroSlide,
+  type Destination,
+  type VisaCat,
 } from "./data";
 import { supabase, isSupabaseConfigured, CONTENT_TABLE, CONTENT_ROW_ID } from "./supabase";
 
@@ -24,10 +33,20 @@ import { supabase, isSupabaseConfigured, CONTENT_TABLE, CONTENT_ROW_ID } from ".
 
 export type Business = typeof defaultBusiness;
 
+export type HeroPartner = (typeof defaultHeroPartners)[number];
+export type IncludedService = (typeof defaultIncludedServices)[number];
+export type VisaInclude = (typeof defaultVisaIncludes)[number];
+
 export type Content = {
   umrahPacks: UmrahPack[];
   umrahMoreDepartures: UmrahPack[];
   hotels: Hotel[];
+  heroSlides: HeroSlide[];
+  heroPartners: HeroPartner[];
+  destinations: Destination[];
+  includedServices: IncludedService[];
+  visaCats: VisaCat[];
+  visaIncludes: VisaInclude[];
   business: Business;
 };
 
@@ -41,6 +60,12 @@ function makeDefaults(): Content {
     umrahPacks: defaultUmrahPacks,
     umrahMoreDepartures: defaultUmrahMore,
     hotels: defaultHotels,
+    heroSlides: defaultHeroSlides,
+    heroPartners: defaultHeroPartners,
+    destinations: defaultDestinations,
+    includedServices: defaultIncludedServices,
+    visaCats: defaultVisaCats,
+    visaIncludes: defaultVisaIncludes,
     business: defaultBusiness,
   });
 }

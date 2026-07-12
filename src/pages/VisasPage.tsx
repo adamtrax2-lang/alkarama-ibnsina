@@ -1,10 +1,13 @@
 import { useLang } from "../i18n";
-import { visaCats, visaIncludes, wa } from "../data";
+import { wa } from "../data";
+import { useContent } from "../store";
 import { PageBanner } from "../components/PageBanner";
 import { Icon } from "../components/Icons";
 
 export default function VisasPage() {
   const { tr, lang } = useLang();
+  const { content } = useContent();
+  const { visaCats, visaIncludes } = content;
 
   return (
     <>

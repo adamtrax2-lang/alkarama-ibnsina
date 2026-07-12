@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useLang } from "../i18n";
-import { business, wa } from "../data";
+import { wa } from "../data";
+import { useContent } from "../store";
 import { Icon } from "./Icons";
 
 const links = [
@@ -15,6 +16,8 @@ const links = [
 
 export default function Navbar() {
   const { tr, lang, setLang } = useLang();
+  const { content } = useContent();
+  const business = content.business;
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
 

@@ -1,10 +1,12 @@
 import { useLang } from "../i18n";
 import { PageBanner } from "../components/PageBanner";
 import { DestinationCard } from "../components/Sections";
-import { destinations } from "../data";
+import { useContent } from "../store";
 
 export default function DestinationsPage() {
   const { tr } = useLang();
+  const { content } = useContent();
+  const destinations = content.destinations;
 
   return (
     <>

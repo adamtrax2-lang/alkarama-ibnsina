@@ -2,7 +2,8 @@ import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { Link } from "react-router-dom";
 import { useContent, type Content, type Business } from "../store";
 import { isSupabaseConfigured, supabase } from "../supabase";
-import type { UmrahPack, Hotel } from "../data";
+import { uploadImage } from "../upload";
+import type { UmrahPack, Hotel, HeroSlide, Destination, VisaCat } from "../data";
 
 /*
   Admin panel.
@@ -22,7 +23,7 @@ const AUTH_KEY = "alkarama_admin_authed";
 const clone = <T,>(x: T): T => JSON.parse(JSON.stringify(x));
 
 type Lg = { fr: string; en: string };
-type Tab = "omra" | "omraMore" | "hotels" | "contact";
+type Tab = "omra" | "omraMore" | "hotels" | "hero" | "visas" | "destinations" | "contact";
 
 /* ----------------------------- shared inputs ----------------------------- */
 function TextInput({
@@ -115,6 +116,72 @@ function AddButton({ label, onClick }: { label: string; onClick: () => void }) {
   );
 }
 
+/* ----------------------------- Image field (upload or path) ----------------------------- */
+// Replaces the old "image path" text input. In cloud mode the client uploads a photo
+// (compressed in the browser, stored in Supabase Storage). The manual path field stays
+// available as a fallback and for local mode.
+function ImageField({
+  label,
+  value,
+  onChange,
+  folder,
+}: {
+  label: string;
+  value: string;
+  onChange: (v: string) => void;
+  folder: string;
+}) {
+  const [busy, setBusy] = useState(false);
+  const [err, setErr] = useState("");
+
+  const onFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    e.target.value = ""; // allow re-picking the same file later
+    if (!file) return;
+    setErr("");
+    setBusy(true);
+    const res = await uploadImage(file, folder);
+    setBusy(false);
+    if (res.ok && res.url) onChange(res.url);
+    else setErr(res.error || "Echec de l'upload.");
+  };
+
+  return (
+    <div>
+      <span className="mb-1 block text-xs font-semibold uppercase tracking-wide text-charcoal/50">{label}</span>
+      <div className="flex items-start gap-3">
+        <div className="h-20 w-28 shrink-0 overflow-hidden rounded-lg border border-charcoal/15 bg-cream">
+          {value ? (
+            <img src={value} alt="" className="h-full w-full object-cover" />
+          ) : (
+            <div className="grid h-full w-full place-items-center text-[10px] text-charcoal/40">Aucune image</div>
+          )}
+        </div>
+        <div className="flex-1 space-y-2">
+          {isSupabaseConfigured ? (
+            <label className="inline-flex cursor-pointer items-center gap-2 rounded-lg border border-gold/60 px-3 py-2 text-xs font-semibold text-gold transition hover:bg-gold/5">
+              <input type="file" accept="image/*" onChange={onFile} className="hidden" disabled={busy} />
+              {busy ? "Envoi..." : "Choisir une photo"}
+            </label>
+          ) : (
+            <p className="text-[11px] text-charcoal/45">
+              L'upload de photos sera actif une fois la base de donnees configuree. Pour l'instant, indiquez un
+              chemin d'image ci-dessous.
+            </p>
+          )}
+          {err && <p className="text-xs text-red-600">{err}</p>}
+          <input
+            value={value}
+            onChange={(e) => onChange(e.target.value)}
+            placeholder="/hero/exemple.jpg ou une URL"
+            className="w-full rounded-lg border border-charcoal/15 px-3 py-1.5 text-xs outline-none focus:border-gold"
+          />
+        </div>
+      </div>
+    </div>
+  );
+}
+
 /* ----------------------------- Umrah editor ----------------------------- */
 function emptyPack(): UmrahPack {
   return {
@@ -133,6 +200,7 @@ function PackEditor({ pack, onChange, onDelete }: { pack: UmrahPack; onChange: (
     <Card onDelete={onDelete}>
       <div className="space-y-4 pr-20">
         <BiField label="Nom de la formule" value={pack.name} onChange={(v) => set({ name: v })} />
+        <ImageField label="Photo de la formule" value={pack.img ?? ""} onChange={(v) => set({ img: v })} folder="packs" />
         <BiField label="Date de depart (badge)" value={pack.dateLabel} onChange={(v) => set({ dateLabel: v })} />
         <BiField
           label="Autres dates (petit texte, optionnel)"
@@ -261,18 +329,7 @@ function PackEditor({ pack, onChange, onDelete }: { pack: UmrahPack; onChange: (
 }
 
 /* ----------------------------- Hotels editor ----------------------------- */
-function emptyHotel(): Hotel {
-  return {
-    name: "Nouvel hotel",
-    country: { fr: "", en: "" },
-    city: { fr: "", en: "" },
-    stars: 5,
-    img: "/hotels/tunisia.jpg",
-    price: "",
-  };
-}
-
-function HotelEditor({ hotel, onChange, onDelete }: { hotel: Hotel; onChange: (h: Hotel) => void; onDelete: () => void }) {
+function HotelEditor({ hotel, onChange, onDelete }: { hotel: Hotel; onChange: (h: Hotel) => void; onDelete?: () => void }) {
   const set = (patch: Partial<Hotel>) => onChange({ ...hotel, ...patch });
   return (
     <Card onDelete={onDelete}>
@@ -280,7 +337,7 @@ function HotelEditor({ hotel, onChange, onDelete }: { hotel: Hotel; onChange: (h
         <TextInput label="Nom de l'hotel" value={hotel.name} onChange={(v) => set({ name: v })} />
         <BiField label="Pays" value={hotel.country} onChange={(v) => set({ country: v })} />
         <BiField label="Ville" value={hotel.city} onChange={(v) => set({ city: v })} />
-        <div className="grid gap-4 sm:grid-cols-3">
+        <div className="grid gap-4 sm:grid-cols-2">
           <label className="block">
             <span className="mb-1 block text-xs font-semibold uppercase tracking-wide text-charcoal/50">
               Etoiles
@@ -298,12 +355,8 @@ function HotelEditor({ hotel, onChange, onDelete }: { hotel: Hotel; onChange: (h
             </select>
           </label>
           <TextInput label="Prix (ex: 630 DT)" value={hotel.price} onChange={(v) => set({ price: v })} />
-          <TextInput label="Image (chemin)" value={hotel.img} onChange={(v) => set({ img: v })} />
         </div>
-        <p className="text-xs text-charcoal/45">
-          Astuce : l'upload de photos depuis le panneau arrivera avec la base de donnees. Pour l'instant, le
-          champ image pointe vers une photo deja presente sur le site.
-        </p>
+        <ImageField label="Photo de l'hotel" value={hotel.img} onChange={(v) => set({ img: v })} folder="hotels" />
       </div>
     </Card>
   );
@@ -335,12 +388,184 @@ function ContactEditor({ business, onChange }: { business: Business; onChange: (
         <div className="sm:col-span-2">
           <TextInput label="Lien Instagram" value={business.instagram} onChange={(v) => set({ instagram: v })} />
         </div>
+        <TextInput label="Lien TikTok" value={business.tiktok} onChange={(v) => set({ tiktok: v })} />
+        <TextInput label="Chaine YouTube (lien profil)" value={business.youtube} onChange={(v) => set({ youtube: v })} />
+        <div className="sm:col-span-2">
+          <TextInput label="Lien X (Twitter)" value={business.x} onChange={(v) => set({ x: v })} />
+        </div>
+        <p className="text-xs text-charcoal/45 sm:col-span-2">
+          Astuce : laissez un champ vide pour masquer ce reseau sur le site (l'icone disparait automatiquement).
+        </p>
         <div className="sm:col-span-2">
           <TextInput
-            label="Lien video YouTube (a afficher sur le site)"
+            label="Lien video YouTube a afficher sur le site (section Video)"
             value={business.featuredVideoUrl}
             onChange={(v) => set({ featuredVideoUrl: v })}
           />
+        </div>
+      </div>
+    </Card>
+  );
+}
+
+/* ----------------------------- shared list helpers ----------------------------- */
+// Editable list of plain strings (e.g. a visa category's country list).
+function StringListEditor({ label, items, onChange, locked = false }: { label: string; items: string[]; onChange: (v: string[]) => void; locked?: boolean }) {
+  return (
+    <div>
+      <span className="mb-2 block text-xs font-semibold uppercase tracking-wide text-charcoal/50">{label}</span>
+      <div className="flex flex-wrap gap-2">
+        {items.map((c, i) => (
+          <div key={i} className="flex items-center gap-1 rounded-lg bg-cream px-2 py-1">
+            <input
+              value={c}
+              onChange={(e) => onChange(items.map((x, j) => (j === i ? e.target.value : x)))}
+              className="w-36 rounded border border-charcoal/15 px-2 py-1 text-sm outline-none focus:border-gold"
+            />
+            {!locked && (
+              <button onClick={() => onChange(items.filter((_, j) => j !== i))} className="px-1 text-xs font-bold text-red-500">
+                X
+              </button>
+            )}
+          </div>
+        ))}
+      </div>
+      {!locked && (
+        <button onClick={() => onChange([...items, ""])} className="mt-2 text-xs font-semibold text-gold hover:underline">
+          + Ajouter
+        </button>
+      )}
+    </div>
+  );
+}
+
+// Editable list of bilingual lines (e.g. the "included in your file" visa bullets).
+function BiListEditor({ label, addLabel, items, onChange, locked = false }: { label: string; addLabel: string; items: Lg[]; onChange: (v: Lg[]) => void; locked?: boolean }) {
+  return (
+    <div>
+      <span className="mb-2 block text-xs font-semibold uppercase tracking-wide text-charcoal/50">{label}</span>
+      <div className="space-y-2">
+        {items.map((s, i) => (
+          <div key={i} className="flex items-start gap-2">
+            <div className="flex-1">
+              <BiField label={`Ligne ${i + 1}`} value={s} onChange={(v) => onChange(items.map((x, j) => (j === i ? v : x)))} />
+            </div>
+            {!locked && (
+              <button
+                onClick={() => onChange(items.filter((_, j) => j !== i))}
+                className="mt-6 rounded-lg bg-red-50 px-2 py-2 text-xs font-semibold text-red-600 hover:bg-red-100"
+              >
+                X
+              </button>
+            )}
+          </div>
+        ))}
+      </div>
+      {!locked && (
+        <button onClick={() => onChange([...items, { fr: "", en: "" }])} className="mt-2 text-xs font-semibold text-gold hover:underline">
+          + {addLabel}
+        </button>
+      )}
+    </div>
+  );
+}
+
+/* ----------------------------- Hero editor ----------------------------- */
+function HeroSlideEditor({ slide, onChange }: { slide: HeroSlide; onChange: (s: HeroSlide) => void }) {
+  const set = (patch: Partial<HeroSlide>) => onChange({ ...slide, ...patch });
+  const setCard = (patch: Partial<HeroSlide["card"]>) => onChange({ ...slide, card: { ...slide.card, ...patch } });
+  return (
+    <Card>
+      <div className="space-y-4">
+        <BiField label="Service (petit badge)" value={slide.service} onChange={(v) => set({ service: v })} />
+        <BiField label="Titre principal" value={slide.headline} onChange={(v) => set({ headline: v })} />
+        <BiField label="Sous-titre" value={slide.tagline} onChange={(v) => set({ tagline: v })} textarea />
+        <ImageField label="Photo de fond" value={slide.img} onChange={(v) => set({ img: v })} folder="hero" />
+        <ImageField
+          label="Photo de la carte offre (optionnel)"
+          value={slide.cardImg ?? ""}
+          onChange={(v) => set({ cardImg: v })}
+          folder="hero"
+        />
+        <div className="space-y-4 rounded-xl bg-cream p-4">
+          <p className="text-xs font-bold uppercase tracking-wide text-charcoal/50">Carte offre (encadre a droite)</p>
+          <BiField label="Badge" value={slide.card.badge} onChange={(v) => setCard({ badge: v })} />
+          <label className="flex items-center gap-2 text-sm font-medium text-charcoal">
+            <input
+              type="checkbox"
+              checked={!!slide.card.urgent}
+              onChange={(e) => setCard({ urgent: e.target.checked })}
+              className="h-4 w-4 accent-gold"
+            />
+            Badge d'urgence (rouge) au lieu du badge dore
+          </label>
+          <BiField label="Titre de l'offre" value={slide.card.title} onChange={(v) => setCard({ title: v })} />
+          <BiField label="Sous-titre de l'offre" value={slide.card.sub} onChange={(v) => setCard({ sub: v })} />
+          <TextInput label="Prix (optionnel, ex: des 4 250 DT)" value={slide.card.price ?? ""} onChange={(v) => setCard({ price: v })} />
+          <TextInput label="Message WhatsApp du bouton" value={slide.card.waMsg} onChange={(v) => setCard({ waMsg: v })} />
+        </div>
+      </div>
+    </Card>
+  );
+}
+
+/* ----------------------------- Visas editor ----------------------------- */
+function VisaCatEditor({ cat, onChange, onDelete }: { cat: VisaCat; onChange: (c: VisaCat) => void; onDelete?: () => void }) {
+  const set = (patch: Partial<VisaCat>) => onChange({ ...cat, ...patch });
+  return (
+    <Card onDelete={onDelete}>
+      <div className="space-y-4 pr-20">
+        <BiField label="Nom de la categorie" value={cat.name} onChange={(v) => set({ name: v })} />
+        <ImageField label="Photo" value={cat.img} onChange={(v) => set({ img: v })} folder="visas" />
+        <StringListEditor label="Pays / types de visa" items={cat.countries} onChange={(v) => set({ countries: v })} locked />
+      </div>
+    </Card>
+  );
+}
+
+/* ----------------------------- Destinations editor ----------------------------- */
+function emptyDestination(): Destination {
+  return {
+    id: "dest-" + Math.floor(performance.now() % 1000000),
+    img: "/hero/cairo.jpg",
+    title: { fr: "Nouvelle destination", en: "New destination" },
+    desc: { fr: "", en: "" },
+    waMsg: "Bonjour, je suis interesse par ce voyage.",
+    featured: true,
+  };
+}
+
+function DestinationEditor({ dest, onChange, onDelete }: { dest: Destination; onChange: (d: Destination) => void; onDelete: () => void }) {
+  const set = (patch: Partial<Destination>) => onChange({ ...dest, ...patch });
+  return (
+    <Card onDelete={onDelete}>
+      <div className="space-y-4 pr-20">
+        <BiField label="Titre" value={dest.title} onChange={(v) => set({ title: v })} />
+        <BiField label="Description" value={dest.desc} onChange={(v) => set({ desc: v })} textarea />
+        <ImageField label="Photo" value={dest.img} onChange={(v) => set({ img: v })} folder="destinations" />
+        <div className="grid gap-4 sm:grid-cols-2">
+          <TextInput label="Prix a partir de (optionnel)" value={dest.priceFrom ?? ""} onChange={(v) => set({ priceFrom: v })} />
+          <TextInput label="Message WhatsApp" value={dest.waMsg} onChange={(v) => set({ waMsg: v })} />
+        </div>
+        <div className="flex flex-wrap gap-6">
+          <label className="flex items-center gap-2 text-sm font-medium text-charcoal">
+            <input
+              type="checkbox"
+              checked={!!dest.featured}
+              onChange={(e) => set({ featured: e.target.checked })}
+              className="h-4 w-4 accent-gold"
+            />
+            Afficher sur l'accueil (mise en avant)
+          </label>
+          <label className="flex items-center gap-2 text-sm font-medium text-charcoal">
+            <input
+              type="checkbox"
+              checked={!!dest.promo}
+              onChange={(e) => set({ promo: e.target.checked })}
+              className="h-4 w-4 accent-gold"
+            />
+            Ruban PROMO
+          </label>
         </div>
       </div>
     </Card>
@@ -456,9 +681,12 @@ export default function AdminPage() {
   };
 
   const tabs: { id: Tab; label: string }[] = [
+    { id: "hero", label: "Accueil (hero)" },
     { id: "omra", label: "Formules Omra (accueil)" },
     { id: "omraMore", label: "Autres departs" },
     { id: "hotels", label: "Hotels" },
+    { id: "destinations", label: "Destinations" },
+    { id: "visas", label: "Visas" },
     { id: "contact", label: "Coordonnees" },
   ];
 
@@ -559,19 +787,100 @@ export default function AdminPage() {
         )}
 
         {tab === "hotels" && (
-          <Section title="Hotels" note="Cartes affichees sur l'accueil et la page Hotels.">
+          <Section title="Hotels" note="Cartes affichees sur l'accueil et la page Hotels. Modifiez le texte, la photo et le prix des hotels existants.">
             <div className="space-y-5">
               {draft.hotels.map((h, i) => (
                 <HotelEditor
                   key={i}
                   hotel={h}
                   onChange={(nh) => setDraft({ ...draft, hotels: draft.hotels.map((x, j) => (j === i ? nh : x)) })}
-                  onDelete={() => setDraft({ ...draft, hotels: draft.hotels.filter((_, j) => j !== i) })}
+                />
+              ))}
+            </div>
+          </Section>
+        )}
+
+        {tab === "hero" && (
+          <Section
+            title="Section d'accueil (hero)"
+            note="Les grandes diapositives en haut de la page d'accueil et leur carte offre, plus les logos partenaires."
+          >
+            <div className="space-y-5">
+              {draft.heroSlides.map((s, i) => (
+                <HeroSlideEditor
+                  key={i}
+                  slide={s}
+                  onChange={(ns) => setDraft({ ...draft, heroSlides: draft.heroSlides.map((x, j) => (j === i ? ns : x)) })}
+                />
+              ))}
+            </div>
+
+            <h2 className="mt-10 font-display text-xl font-bold text-charcoal">Logos partenaires</h2>
+            <p className="mb-4 mt-1 text-sm text-charcoal/55">Bandeau defilant sur la photo d'accueil.</p>
+            <div className="space-y-4">
+              {draft.heroPartners.map((p, i) => {
+                const setP = (patch: Partial<typeof p>) =>
+                  setDraft({ ...draft, heroPartners: draft.heroPartners.map((x, j) => (j === i ? { ...x, ...patch } : x)) });
+                return (
+                  <Card key={i}>
+                    <div className="space-y-4">
+                      <TextInput label="Nom du partenaire" value={p.name} onChange={(v) => setP({ name: v })} />
+                      {p.img === undefined && p.text !== undefined ? (
+                        <TextInput label="Texte (si pas de logo)" value={p.text ?? ""} onChange={(v) => setP({ text: v })} />
+                      ) : (
+                        <ImageField label="Logo" value={p.img ?? ""} onChange={(v) => setP({ img: v })} folder="partners" />
+                      )}
+                    </div>
+                  </Card>
+                );
+              })}
+            </div>
+          </Section>
+        )}
+
+        {tab === "destinations" && (
+          <Section
+            title="Destinations"
+            note="Cartes affichees dans la section Nos Packs (accueil) et sur la page Destinations. Cochez 'accueil' pour les afficher en page d'accueil."
+          >
+            <div className="space-y-5">
+              {draft.destinations.map((d, i) => (
+                <DestinationEditor
+                  key={i}
+                  dest={d}
+                  onChange={(nd) => setDraft({ ...draft, destinations: draft.destinations.map((x, j) => (j === i ? nd : x)) })}
+                  onDelete={() => setDraft({ ...draft, destinations: draft.destinations.filter((_, j) => j !== i) })}
                 />
               ))}
             </div>
             <div className="mt-5">
-              <AddButton label="Ajouter un hotel" onClick={() => setDraft({ ...draft, hotels: [...draft.hotels, emptyHotel()] })} />
+              <AddButton
+                label="Ajouter une destination"
+                onClick={() => setDraft({ ...draft, destinations: [...draft.destinations, emptyDestination()] })}
+              />
+            </div>
+          </Section>
+        )}
+
+        {tab === "visas" && (
+          <Section title="Visas" note="Categories affichees sur l'accueil et la page Visas, et la liste des prestations incluses.">
+            <div className="mb-8 rounded-2xl border border-charcoal/10 bg-white p-5 shadow-sm">
+              <BiListEditor
+                label="Inclus dans chaque dossier (affiche sur toutes les cartes visa)"
+                addLabel="Ajouter une prestation"
+                items={draft.visaIncludes}
+                onChange={(v) => setDraft({ ...draft, visaIncludes: v })}
+                locked
+              />
+            </div>
+            <div className="space-y-5">
+              {draft.visaCats.map((c, i) => (
+                <VisaCatEditor
+                  key={i}
+                  cat={c}
+                  onChange={(nc) => setDraft({ ...draft, visaCats: draft.visaCats.map((x, j) => (j === i ? nc : x)) })}
+                />
+              ))}
             </div>
           </Section>
         )}

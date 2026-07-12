@@ -1,7 +1,10 @@
-import { business, wa } from "../data";
+import { wa } from "../data";
+import { useContent } from "../store";
 import { Icon } from "./Icons";
 
 export default function SocialRail() {
+  const { content } = useContent();
+  const business = content.business;
   const items = [
     { href: business.facebook, label: "Facebook", icon: Icon.facebook, cls: "bg-[#1877F2] text-white" },
     { href: business.instagram, label: "Instagram", icon: Icon.instagram, cls: "instagram-grad text-white" },

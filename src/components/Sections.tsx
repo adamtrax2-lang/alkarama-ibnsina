@@ -2,14 +2,9 @@ import { Link } from "react-router-dom";
 import { useLang } from "../i18n";
 import { useContent } from "../store";
 import {
-  visaCats,
-  visaIncludes,
   billetsCards,
   reviews,
   wa,
-  business,
-  destinations,
-  includedServices,
   type Destination,
   type UmrahPack,
   type Hotel,
@@ -125,42 +120,45 @@ export function OmraPackCard({ p }: { p: UmrahPack }) {
           <p className={`mt-3 text-xs italic ${hi ? "text-charcoal/60" : "text-white/45"}`}>{p.notIncluded[lang]}</p>
         )}
 
-        {/* occupancy prices, or a "price on request" note when no prices are set yet */}
-        {p.prices.length > 0 ? (
-          <>
-            <div className={`mt-6 grid grid-cols-3 gap-2 rounded-2xl p-3 text-center ${hi ? "bg-charcoal/10" : "bg-white/5"}`}>
-              {p.prices.map((pr) => (
-                <div key={pr.people}>
-                  <span className={`flex justify-center ${hi ? "[&_svg]:text-charcoal/60" : "[&_svg]:text-white/45"}`}>
-                    {Array.from({ length: pr.people }).map((_, idx) => (
-                      <Icon.person key={idx} className="-ml-1 h-3.5 w-3.5 first:ml-0" />
-                    ))}
-                  </span>
-                  <p className="mt-1.5 font-sans text-xl font-extrabold leading-none">{pr.val}</p>
-                  <p className={`text-[10px] ${hi ? "text-charcoal/60" : "text-white/45"}`}>DT</p>
-                </div>
-              ))}
-            </div>
-            <p className={`mt-2 text-center text-[11px] ${hi ? "text-charcoal/55" : "text-white/40"}`}>
-              {tr("omra.priceLabel")}
-            </p>
-          </>
-        ) : (
-          p.priceNote && (
-            <div className={`mt-6 rounded-2xl p-3 text-center text-sm font-semibold ${hi ? "bg-charcoal/10 text-charcoal" : "bg-white/5 text-gold-light"}`}>
-              {p.priceNote[lang]}
-            </div>
-          )
-        )}
+        {/* occupancy prices + book button, anchored together at the bottom of the card so all
+            cards in a row line up regardless of how long their services list is above */}
+        <div className="mt-6 md:mt-auto">
+          {p.prices.length > 0 ? (
+            <>
+              <div className={`grid grid-cols-3 gap-2 rounded-2xl p-3 text-center ${hi ? "bg-charcoal/10" : "bg-white/5"}`}>
+                {p.prices.map((pr) => (
+                  <div key={pr.people}>
+                    <span className={`flex justify-center ${hi ? "[&_svg]:text-charcoal/60" : "[&_svg]:text-white/45"}`}>
+                      {Array.from({ length: pr.people }).map((_, idx) => (
+                        <Icon.person key={idx} className="-ml-1 h-3.5 w-3.5 first:ml-0" />
+                      ))}
+                    </span>
+                    <p className="mt-1.5 font-sans text-xl font-extrabold leading-none">{pr.val}</p>
+                    <p className={`text-[10px] ${hi ? "text-charcoal/60" : "text-white/45"}`}>DT</p>
+                  </div>
+                ))}
+              </div>
+              <p className={`mt-2 text-center text-[11px] ${hi ? "text-charcoal/55" : "text-white/40"}`}>
+                {tr("omra.priceLabel")}
+              </p>
+            </>
+          ) : (
+            p.priceNote && (
+              <div className={`rounded-2xl p-3 text-center text-sm font-semibold ${hi ? "bg-charcoal/10 text-charcoal" : "bg-white/5 text-gold-light"}`}>
+                {p.priceNote[lang]}
+              </div>
+            )
+          )}
 
-        <a
-          href={wa(`Bonjour, je suis interesse par la formule Omra ${p.name.fr}.`)}
-          target="_blank"
-          rel="noreferrer"
-          className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-full bg-emerald-600 py-3 text-sm font-semibold text-white shadow-lg shadow-emerald-600/20 transition hover:bg-emerald-700 md:mt-auto"
-        >
-          <Icon.whatsapp className="h-4 w-4" /> {tr("hero.book")}
-        </a>
+          <a
+            href={wa(`Bonjour, je suis interesse par la formule Omra ${p.name.fr}.`)}
+            target="_blank"
+            rel="noreferrer"
+            className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-full bg-emerald-600 py-3 text-sm font-semibold text-white shadow-lg shadow-emerald-600/20 transition hover:bg-emerald-700"
+          >
+            <Icon.whatsapp className="h-4 w-4" /> {tr("hero.book")}
+          </a>
+        </div>
       </div>
     </div>
   );
@@ -261,6 +259,8 @@ export function Hotels() {
 /* ---------------- Visas ---------------- */
 export function Visas() {
   const { tr, lang } = useLang();
+  const { content } = useContent();
+  const { visaCats, visaIncludes } = content;
   return (
     <section id="visas" className="bg-cream py-20">
       <div className="container-x">
@@ -383,6 +383,8 @@ export function DestinationCard({ d }: { d: Destination }) {
 /* ---------------- Destinations & included services ---------------- */
 export function TravelPacks() {
   const { tr, lang } = useLang();
+  const { content } = useContent();
+  const { destinations, includedServices } = content;
   const featured = destinations.filter((d) => d.featured);
   return (
     <section id="packs" className="bg-sand py-20">
@@ -428,6 +430,8 @@ export function TravelPacks() {
 /* ---------------- Connect (social media cards, EliteMasar style) ---------------- */
 export function Connect() {
   const { tr, lang } = useLang();
+  const { content } = useContent();
+  const business = content.business;
   const AV = "/brand/avatar.png";
   const LG = "/brand/logo-white.png";
   const NAME = "AlKarama Ibn Sina";
@@ -634,18 +638,22 @@ export function Reviews() {
   const { tr, lang } = useLang();
   const { content } = useContent();
   const business = content.business;
+  const sub =
+    lang === "fr"
+      ? `${business.rating} sur ${business.reviews} avis Google`
+      : `${business.rating} from ${business.reviews} Google reviews`;
   return (
     <section id="reviews" className="bg-cream py-20">
       <div className="container-x">
-        <SectionHead kicker={tr("reviews.kicker")} title={tr("reviews.title")} sub={tr("reviews.sub")} />
-        <div className="grid gap-6 md:grid-cols-3">
+        <SectionHead kicker={tr("reviews.kicker")} title={tr("reviews.title")} sub={sub} />
+        <div className="grid items-stretch gap-6 md:grid-cols-3">
           {reviews.map((r) => (
-            <figure key={r.name} className="card p-6">
+            <figure key={r.name} className="card flex flex-col p-6">
               <Stars n={r.stars} />
               <blockquote className="mt-3 text-sm leading-relaxed text-charcoal/75">“{r.text[lang]}”</blockquote>
-              <figcaption className="mt-4 flex items-center gap-3 border-t border-charcoal/10 pt-4">
-                <span className="grid h-10 w-10 place-items-center rounded-full bg-gold/15 font-semibold text-gold">
-                  {r.name.charAt(0)}
+              <figcaption className="mt-4 flex items-center gap-3 border-t border-charcoal/10 pt-4 md:mt-auto">
+                <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-gold text-white">
+                  <Icon.person className="h-5 w-5" />
                 </span>
                 <div>
                   <p className="text-sm font-semibold text-charcoal">{r.name}</p>

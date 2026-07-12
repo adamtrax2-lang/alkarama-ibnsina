@@ -27,3 +27,6 @@ export const supabase: SupabaseClient | null = isSupabaseConfigured
 // The whole editable site lives in one row of the `site_content` table (see supabase/schema.sql).
 export const CONTENT_TABLE = "site_content";
 export const CONTENT_ROW_ID = "main";
+
+// Public bucket that holds photos uploaded from the admin panel (see supabase/schema.sql).
+export const IMAGE_BUCKET = "site-images";

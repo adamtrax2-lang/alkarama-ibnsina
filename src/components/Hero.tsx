@@ -1,18 +1,26 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useLang } from "../i18n";
-import { heroSlides, heroPartners, wa } from "../data";
+import { wa } from "../data";
+import { useContent } from "../store";
 import { Icon } from "./Icons";
 
 export default function Hero() {
   const { tr, lang } = useLang();
+  const { content } = useContent();
+  const heroSlides = content.heroSlides;
+  const heroPartners = content.heroPartners;
   const [i, setI] = useState(0);
-  const slide = heroSlides[i];
+  // Guard against the client emptying the slide list in the admin panel.
+  const slide = heroSlides[i] ?? heroSlides[0];
 
   useEffect(() => {
+    if (heroSlides.length === 0) return;
     const id = setInterval(() => setI((p) => (p + 1) % heroSlides.length), 4500);
     return () => clearInterval(id);
-  }, []);
+  }, [heroSlides.length]);
+
+  if (!slide) return null;
 
   return (
     <section id="home" className="relative min-h-screen w-full overflow-hidden lg:h-screen">
@@ -55,7 +63,7 @@ export default function Hero() {
               className="mx-auto max-w-sm animate-slidein overflow-hidden rounded-3xl border border-white/15 bg-white/10 backdrop-blur-md sm:max-w-md lg:ml-auto lg:mr-0"
             >
               <div className="relative">
-                <img src={slide.cardImg ?? slide.img} alt="" className="h-64 w-full object-cover sm:h-80" />
+                <img src={slide.cardImg || slide.img} alt="" className="h-64 w-full object-cover sm:h-80" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent" />
                 <span
                   className={`absolute left-3 top-3 rounded-full px-3 py-1 text-[11px] font-bold uppercase tracking-wide text-white shadow ${

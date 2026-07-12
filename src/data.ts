@@ -10,7 +10,7 @@ export const business = {
   phoneIntl: "21693996300",
   address: "Carrefour Market Avicenne, Centre Commercial Lawand Ibn Sina, Tunis 2066",
   rating: "5.0",
-  reviews: 15,
+  reviews: 34,
   facebook: "https://www.facebook.com/p/ALKarama-Tourisme-Ibn-Sina-Agency-61581158354727/",
   instagram: "https://www.instagram.com/alkarama.ibnsina.agency/",
   tiktok: "https://www.tiktok.com/@alkaramaibnsina",
@@ -132,16 +132,19 @@ export const morchidoun = { name: "Al Morchidoun", img: "/partners/morchidoun.jp
 // Ooredoo and Star Assurances had no color source at all (only white silhouettes) - recolored to
 // their well-known official brand colors (Ooredoo red, Star Assurances green); worth a quick
 // eyeball-check against the client's own logo files if he ever sends the originals.
+// Filenames carry a "-v2" suffix on purpose: Vercel/browsers were still serving the old cached
+// white-background bytes under the old filenames after each fix, even after redeploying. Renaming
+// forces a fresh fetch. If these ever need reprocessing again, bump to -v3, don't reuse -v2.
 export const heroPartners: { name: string; img?: string; text?: string; color?: boolean }[] = [
-  { name: "Saudi Tourism Authority", img: "/partners/saudi-color.png", color: true },
+  { name: "Saudi Tourism Authority", img: "/partners/saudi-color-v2.png", color: true },
   { name: "Amadeus", text: "amadeus" },
   { name: "Al Morchidoun", img: "/partners/morchidoun-color.png", color: true },
-  { name: "Inspiring Tunisia", img: "/partners/tunisia-color.png", color: true },
-  { name: "IATA", img: "/partners/iata-color.png", color: true },
-  { name: "Go Turkiye", img: "/partners/turkiye-color.png", color: true },
-  { name: "Star Assurances", img: "/partners/star-assurances.png", color: true },
+  { name: "Inspiring Tunisia", img: "/partners/tunisia-color-v2.png", color: true },
+  { name: "IATA", img: "/partners/iata-color-v2.png", color: true },
+  { name: "Go Turkiye", img: "/partners/turkiye-color-v2.png", color: true },
+  { name: "Star Assurances", img: "/partners/star-assurances-v2.png", color: true },
   { name: "Tunisie Telecom", img: "/partners/tunisie-telecom.png", color: true },
-  { name: "Ooredoo", img: "/partners/ooredoo.png", color: true },
+  { name: "Ooredoo", img: "/partners/ooredoo-v2.png", color: true },
 ];
 
 /* ---------- Destinations (image cards, EliteMasar "Destinations Packs" style) ---------- */
